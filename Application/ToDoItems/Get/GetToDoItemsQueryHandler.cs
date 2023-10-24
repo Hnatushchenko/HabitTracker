@@ -4,7 +4,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Get;
 
-public class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery, IEnumerable<ToDoItemResponse>>
+public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery, IEnumerable<ToDoItemResponse>>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
 
