@@ -23,7 +23,8 @@ public sealed class CreateToDoItemCommandHandler : IRequestHandler<CreateToDoIte
             Id = ToDoItemId.From(Guid.NewGuid()),
             Description = request.Description,
             StartTime = request.StartTime,
-            EndTime = request.EndTime
+            EndTime = request.EndTime,
+            DueDate = request.DueDate
         };
         _toDoItemRepository.Add(toDoItem);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

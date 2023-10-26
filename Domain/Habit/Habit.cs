@@ -6,4 +6,6 @@ public sealed class Habit
     public required string Description { get; set; }
     public required TimeUnit FrequencyTimeUnit { get; set; }
     public required FrequencyCount FrequencyCount { get; set; } 
+    public required DateTimeOffset StartDate { get; set; }
+    public List<ToDoItem>? ToDoItems { get; set; }
 }

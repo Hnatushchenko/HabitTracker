@@ -18,12 +18,13 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
     
     public async Task Handle(CreateHabitCommand request, CancellationToken cancellationToken)
     {
-        var habit = new Habit()
+        var habit = new Habit
         {
             Id = HabitId.From(Guid.NewGuid()),
             Description = request.Description,
             FrequencyTimeUnit = request.TimeUnit,
-            FrequencyCount = FrequencyCount.From(request.FrequencyCount)
+            FrequencyCount = FrequencyCount.From(request.FrequencyCount),
+            StartDate = request.StartDate
         };
         _habitRepository.Add(habit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
