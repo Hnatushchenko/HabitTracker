@@ -5,6 +5,7 @@ using Application.ToDoItems.Update;
 using Carter;
 using Domain.ToDoItem;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints;
 
@@ -12,13 +13,28 @@ public sealed class ToDoItems : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
+        
+        app.MapGet("to-do-items/{targetDate}", async ([FromRoute] DateTimeOffset targetDate, ISender sender) =>
+        {
+            var getToDoItemsQuery = new GetToDoItemsQuery
+            {
+                TargetDate = targetDate
+            };
+            var toDoItems = await sender.Send(getToDoItemsQuery);
+            return Results.Ok(toDoItems);
+        });
+        
         app.MapGet("to-do-items", async (ISender sender) =>
         {
-            var toDoItems = await sender.Send(new GetToDoItemsQuery());
+            var getToDoItemsQuery = new GetToDoItemsQuery
+            {
+                TargetDate = DateTimeOffset.Now
+            };
+            var toDoItems = await sender.Send(getToDoItemsQuery);
             return Results.Ok(toDoItems);
         });
 
-        app.MapPatch("to-do-items/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request,  ISender sender) =>
+        app.MapPatch("to-do-items/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request, ISender sender) =>
         {
             var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(ToDoItemId.From(id),
                 request.NewIsDoneValue);

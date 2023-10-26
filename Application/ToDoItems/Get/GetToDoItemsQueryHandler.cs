@@ -20,7 +20,7 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
     {
         var targetDate = request.TargetDate;
         await _habitsBasedToDoItemsCreator.EnsureHabitsBasedToDoItemsCreatedAsync(targetDate, cancellationToken);
-        var toDoItems = await _toDoItemRepository.GetByDueDate(targetDate);
+        var toDoItems = await _toDoItemRepository.GetByDueDateAsync(targetDate);
         var toDoItemResponseList = toDoItems.Select(toDoItem => new ToDoItemResponse(toDoItem.Id,
             toDoItem.StartTime,
             toDoItem.EndTime,

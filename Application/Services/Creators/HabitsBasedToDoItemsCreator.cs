@@ -5,7 +5,6 @@ using Domain.ToDoItem;
 
 namespace Application.Services.Creators;
 
-
 public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
 {
     private readonly IToDoItemRepository _toDoItemRepository;
@@ -24,7 +23,7 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
     public async Task EnsureHabitsBasedToDoItemsCreatedAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
         var habits = await _habitRepository.GetByTargetDateAsync(targetDate);
-        var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabit(targetDate);
+        var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate);
         foreach (var habit in habits)
         {
             if (toDoItems.All(toDoItem => toDoItem.Habit!.Id != habit.Id))
@@ -34,11 +33,10 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
                     Id = ToDoItemId.From(Guid.NewGuid()),
                     Description = habit.Description,
                     DueDate = targetDate,
-                    Habit = habit,
                     StartTime = TimeOnly.MinValue,
                     EndTime = TimeOnly.MinValue,
                 };
-                _toDoItemRepository.Add(toDoItem);
+                _toDoItemRepository.AddToDoItemForHabit(toDoItem, habit.Id);
             }
         }
         

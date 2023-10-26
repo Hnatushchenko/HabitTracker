@@ -1,5 +1,4 @@
-﻿using Domain.Habit;
-namespace Domain.ToDoItem;
+﻿namespace Domain.ToDoItem;
 
 public sealed class ToDoItem
 {
@@ -9,5 +8,4 @@ public sealed class ToDoItem
     public required string Description { get; set; }
     public required DateTimeOffset DueDate { get; set; }
     public bool IsDone { get; set; }
-    public Habit? Habit { get; set; }
 }

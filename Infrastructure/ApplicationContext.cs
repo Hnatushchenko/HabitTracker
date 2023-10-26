@@ -8,17 +8,18 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
 {
     public DbSet<ToDoItem> ToDoItems => Set<ToDoItem>();
     public DbSet<Habit> Habits => Set<Habit>();
+    public DbSet<HabitToDoItem> HabitToDoItems => Set<HabitToDoItem>();
     
     public ApplicationContext()
     {
-        Database.EnsureDeleted();
+        // Database.EnsureDeleted();
         Database.EnsureCreated();
     }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\mssqllocaldb;Database=UltimateSelfimprovementDb;Trusted_Connection=True;");
+            "Server=(localdb)\\mssqllocaldb;Database=UltimateSelfimprovementDbs33;Trusted_Connection=True;");
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

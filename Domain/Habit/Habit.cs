@@ -7,5 +7,6 @@ public sealed class Habit
     public required TimeUnit FrequencyTimeUnit { get; set; }
     public required FrequencyCount FrequencyCount { get; set; } 
     public required DateTimeOffset StartDate { get; set; }
-    public List<ToDoItem>? ToDoItems { get; set; }
+    public bool IsArchived { get; set; }
+    public List<ToDoItem.ToDoItem>? ToDoItems { get; set; }
 }

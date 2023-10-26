@@ -1,4 +1,5 @@
-﻿using Domain.ToDoItem;
+﻿using Domain.Habit;
+using Domain.ToDoItem;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
@@ -31,9 +32,39 @@ public class ToDoItemRepository : IToDoItemRepository
         return toDoItem;
     }
 
+    /// <inheritdoc/>
+    public async Task<List<ToDoItem>> GetByDueDateAsync(DateTimeOffset dueDate)
+    {
+        var toDoItems = (await _applicationContext.ToDoItems
+            .ToListAsync())
+            .Where(toDoItem => toDoItem.DueDate.UtcDateTime.Date == dueDate.Date).ToList();
+        return toDoItems;
+    }
+
+    public async Task<List<HabitToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate)
+    {
+        var toDoItems = (await _applicationContext.HabitToDoItems
+            .Include(habitToDoItem => habitToDoItem.Habit)
+            .Include(habitToDoItem => habitToDoItem.ToDoItem)
+            .ToListAsync())
+            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.UtcDateTime.Date == dueDate.Date).ToList();
+        return toDoItems;
+    }
+
     public void Add(ToDoItem toDoItem)
     {
         _applicationContext.ToDoItems.Add(toDoItem);
+    }
+    
+    public void AddToDoItemForHabit(ToDoItem toDoItem, HabitId habitId)
+    {
+        Add(toDoItem);
+        var habitToDoItem = new HabitToDoItem()
+        {
+            HabitId = habitId,
+            ToDoItemId = toDoItem.Id
+        };
+        _applicationContext.HabitToDoItems.Add(habitToDoItem);
     }
 
     public void Remove(ToDoItem toDoItem)

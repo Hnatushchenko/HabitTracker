@@ -1,4 +1,5 @@
-﻿using Application.Habits.Create;
+﻿using Application.Habits.Archive;
+using Application.Habits.Create;
 using Application.Habits.Delete;
 using Application.Habits.Get;
 using Carter;
@@ -15,6 +16,15 @@ public class Habits : ICarterModule
         {
             var habits = await sender.Send(new GetHabitsQuery());
             return Results.Ok(habits);
+        });
+        
+        app.MapPatch("habits/{id:guid}", async (Guid id, ISender sender) =>
+        {
+            var archiveHabitCommand = new ArchiveHabitCommand(HabitId.From(id));
+            var updateOperationResult = await sender.Send(archiveHabitCommand);
+            var result = updateOperationResult.Match(success => Results.NoContent(),
+                notFound => Results.NotFound());
+            return result;
         });
         
         app.MapPost("habits", async (CreateHabitCommand command, ISender sender) =>
