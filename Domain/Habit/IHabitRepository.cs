@@ -2,5 +2,5 @@
 
 public interface IHabitRepository : IRepository<Habit, HabitId>
 {
-    Task<List<Habit>> GetByTargetDateAsync(DateTimeOffset targetDate);
+    Task<List<Habit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate);
 }

@@ -24,12 +24,7 @@ public class ToDoItemRepository : IToDoItemRepository
     public async Task<OneOf<ToDoItem, NotFound>> GetByIdAsync(ToDoItemId toDoItemId)
     {
         var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId);
-        if (toDoItem is null)
-        {
-            return new NotFound();
-        }
-
-        return toDoItem;
+        return toDoItem is null ? new NotFound() : toDoItem;
     }
 
     /// <inheritdoc/>
@@ -65,6 +60,17 @@ public class ToDoItemRepository : IToDoItemRepository
             ToDoItemId = toDoItem.Id
         };
         _applicationContext.HabitToDoItems.Add(habitToDoItem);
+    }
+
+    public async Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId)
+    {
+        var habitToDoItemsToRemove = await _applicationContext.HabitToDoItems
+            .Include(habitToDoItem => habitToDoItem.ToDoItem)
+            .Where(habitToDoItem => habitToDoItem.HabitId == habitId)
+            .ToListAsync();
+        _applicationContext.HabitToDoItems.RemoveRange(habitToDoItemsToRemove);
+        var toDoItemsToRemove = habitToDoItemsToRemove.Select(habitToDoItem => habitToDoItem.ToDoItem!);
+        _applicationContext.ToDoItems.RemoveRange(toDoItemsToRemove);
     }
 
     public void Remove(ToDoItem toDoItem)

@@ -22,12 +22,7 @@ public class HabitRepository : IHabitRepository
     public async Task<OneOf<Habit, NotFound>> GetByIdAsync(HabitId toDoItemId)
     {
         var habit = await _applicationContext.Habits.FindAsync(toDoItemId);
-        if (habit is null)
-        {
-            return new NotFound();
-        }
-
-        return habit;
+        return habit is null ? new NotFound() : habit;
     }
 
     /// <summary>
@@ -35,9 +30,15 @@ public class HabitRepository : IHabitRepository
     /// </summary>
     /// <param name="targetDate">The date to check for habits.</param>
     /// <returns>A list of habits that match the target date.</returns>
-    public async Task<List<Habit>> GetByTargetDateAsync(DateTimeOffset targetDate)
+    public async Task<List<Habit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate)
     {
-        var shouldHabitOccur = (Habit habit, DateTimeOffset date) =>
+        var activeHabits = await _applicationContext.Habits
+            .Where(habit => !habit.IsArchived)
+            .ToListAsync();
+        var filteredHabits = activeHabits.Where(habit => ShouldHabitOccur(habit, targetDate)).ToList();
+        return filteredHabits;
+
+        bool ShouldHabitOccur(Habit habit, DateTimeOffset date)
         {
             var startDate = habit.StartDate;
             if (startDate.UtcDateTime.Date == date.UtcDateTime.Date)
@@ -65,10 +66,7 @@ public class HabitRepository : IHabitRepository
 
                 return false;
             }
-        };
-        var allHabits = await _applicationContext.Habits.ToListAsync();
-        var filteredHabits = allHabits.Where(habit => shouldHabitOccur(habit, targetDate)).ToList();
-        return filteredHabits;
+        }
     }
 
     public void Add(Habit habit)
