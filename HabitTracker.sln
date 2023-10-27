@@ -1,14 +1,20 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{5D23202D-0B7F-4FF2-80CD-3332EF3A283B}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33829.357
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{5D23202D-0B7F-4FF2-80CD-3332EF3A283B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{B2F42AA9-DCBA-4A1C-B73D-97D03B263903}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{B2F42AA9-DCBA-4A1C-B73D-97D03B263903}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{76D0ED75-BD89-4046-ADC5-89C6279A19AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{76D0ED75-BD89-4046-ADC5-89C6279A19AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{482509DA-62F6-4C2D-BB80-1F2AE98BCCB1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation", "Presentation\Presentation.csproj", "{482509DA-62F6-4C2D-BB80-1F2AE98BCCB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApi", "WebApi\WebApi.csproj", "{E0B4CBAD-1FD8-47D6-BD18-0D387644B043}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApi", "WebApi\WebApi.csproj", "{E0B4CBAD-1FD8-47D6-BD18-0D387644B043}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D23202D-0B7F-4FF2-80CD-3332EF3A283B} = {5D23202D-0B7F-4FF2-80CD-3332EF3A283B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -36,5 +42,8 @@ Global
 		{E0B4CBAD-1FD8-47D6-BD18-0D387644B043}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0B4CBAD-1FD8-47D6-BD18-0D387644B043}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E0B4CBAD-1FD8-47D6-BD18-0D387644B043}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

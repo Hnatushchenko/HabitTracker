@@ -2,7 +2,7 @@
 
 namespace Application.ToDoItems.Get;
 
-public sealed record ToDoItemResponse(ToDoItemId Id,
+public sealed record ToDoItemResponse(Guid Id,
     TimeOnly StartTime,
     TimeOnly EndTime,
     string Description,

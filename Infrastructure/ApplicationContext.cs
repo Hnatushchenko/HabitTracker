@@ -19,7 +19,7 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\mssqllocaldb;Database=UltimateSelfimprovementDbs33;Trusted_Connection=True;");
+            "Server=(localdb)\\mssqllocaldb;Database=UltimateSelfimprovementDbs333;Trusted_Connection=True;");
     }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
