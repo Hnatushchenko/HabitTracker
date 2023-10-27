@@ -1,7 +1,8 @@
 ﻿using Application.ToDoItems.Create;
 using Application.ToDoItems.Delete;
 using Application.ToDoItems.Get;
-using Application.ToDoItems.Update;
+using Application.ToDoItems.Update.Details;
+using Application.ToDoItems.Update.IsDone;
 using Carter;
 using Domain.ToDoItem;
 using MediatR;
@@ -34,11 +35,21 @@ public sealed class ToDoItems : ICarterModule
             return Results.Ok(toDoItems);
         });
 
-        app.MapPatch("to-do-items/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request, ISender sender) =>
+        app.MapPatch("to-do-items/is-done/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request, ISender sender) =>
         {
             var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(ToDoItemId.From(id),
                 request.NewIsDoneValue);
             var updateOperationResult = await sender.Send(updateToDoItemIdDoneCommand);
+            var result = updateOperationResult.Match(updated => Results.NoContent(),
+                notFound => Results.NotFound());
+            return result;
+        });
+        
+        app.MapPatch("to-do-items/details/{id:guid}", async (Guid id, UpdateToDoItemDetailsRequest request, ISender sender) =>
+        {
+            var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(ToDoItemId.From(id),
+                request.StartTime, request.EndTime, request.Description);
+            var updateOperationResult = await sender.Send(updateToDoItemDetailsCommand);
             var result = updateOperationResult.Match(updated => Results.NoContent(),
                 notFound => Results.NotFound());
             return result;

@@ -1,29 +1,32 @@
-﻿using Domain;
+﻿using Application.ToDoItems.Update.IsDone;
+using Domain;
 using Domain.OneOfTypes;
 using Domain.Primitives;
 using Domain.ToDoItem;
 using MediatR;
 
-namespace Application.ToDoItems.Update.IsDone;
+namespace Application.ToDoItems.Update.Details;
 
-public class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItemIsDoneCommand, UpdatedOrNotFound>
+public class UpdateToDoItemDetailsCommandHandler : IRequestHandler<UpdateToDoItemDetailsCommand, UpdatedOrNotFound>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateToDoItemIsDoneCommandHandler(IToDoItemRepository toDoItemRepository,
+    public UpdateToDoItemDetailsCommandHandler(IToDoItemRepository toDoItemRepository,
         IUnitOfWork unitOfWork)
     {
         _toDoItemRepository = toDoItemRepository;
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<UpdatedOrNotFound> Handle(UpdateToDoItemIsDoneCommand request,
+    public async Task<UpdatedOrNotFound> Handle(UpdateToDoItemDetailsCommand request,
         CancellationToken cancellationToken)
     {
         var queryResult = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId);
         if (!queryResult.TryPickT0(out var toDoItem, out var notFound)) return notFound;
-        toDoItem.IsDone = request.NewIsDoneValue;
+        toDoItem.StartTime = request.StartTime;
+        toDoItem.EndTime = request.EndTime;
+        toDoItem.Description = request.Description;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
         return new Updated();
     }

@@ -2,7 +2,6 @@
 using Domain.ToDoItem;
 using MediatR;
 
-namespace Application.ToDoItems.Update;
+namespace Application.ToDoItems.Update.IsDone;
 
 public sealed record UpdateToDoItemIsDoneCommand(ToDoItemId ToDoItemId, bool NewIsDoneValue) : IRequest<UpdatedOrNotFound>;
-public sealed record UpdateToDoItemDetailsCommand(ToDoItemId ToDoItemId, TimeOnly StartTime, TimeOnly EndTime, string Description) : IRequest<UpdatedOrNotFound>;
