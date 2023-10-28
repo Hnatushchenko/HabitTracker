@@ -66,7 +66,7 @@ public class ToDoItemRepository : IToDoItemRepository
     {
         var queryResult = await _applicationContext.HabitToDoItems.FirstOrDefaultAsync(habitToDoItem =>
             habitToDoItem.ToDoItemId == toDoItemId);
-        var result = queryResult is null;
+        var result = queryResult is not null;
         return result;
     }
 
