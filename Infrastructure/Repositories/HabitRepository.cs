@@ -45,27 +45,25 @@ public class HabitRepository : IHabitRepository
             {
                 return true;
             }
-            else
-            {
-                var runner = habit.StartDate;
-                while (runner.UtcDateTime.Date < targetDate.UtcDateTime.Date)
-                {
-                    var nextDate = habit.FrequencyTimeUnit switch
-                    {
-                        TimeUnit.Day => runner.AddDays(habit.FrequencyCount.Value),
-                        TimeUnit.Week => runner.AddDays(habit.FrequencyCount.Value * 7),
-                        TimeUnit.Month => runner.AddMonths(habit.FrequencyCount.Value),
-                        TimeUnit.Year => runner.AddYears(habit.FrequencyCount.Value),
-                        _ => throw new ArgumentOutOfRangeException(nameof(targetDate))
-                    };
-                    if (nextDate.UtcDateTime.Date == targetDate.UtcDateTime.Date)
-                    {
-                        return true;
-                    }
-                }
 
-                return false;
+            var runner = habit.StartDate;
+            while (runner.UtcDateTime.Date < targetDate.UtcDateTime.Date)
+            {
+                runner = habit.FrequencyTimeUnit switch
+                {
+                    TimeUnit.Day => runner.AddDays(habit.FrequencyCount.Value),
+                    TimeUnit.Week => runner.AddDays(habit.FrequencyCount.Value * 7),
+                    TimeUnit.Month => runner.AddMonths(habit.FrequencyCount.Value),
+                    TimeUnit.Year => runner.AddYears(habit.FrequencyCount.Value),
+                    _ => throw new ArgumentOutOfRangeException(nameof(targetDate))
+                };
+                if (runner.UtcDateTime.Date == targetDate.UtcDateTime.Date)
+                {
+                    return true;
+                }
             }
+
+            return false;
         }
     }
 
