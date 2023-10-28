@@ -6,4 +6,5 @@ public sealed record ToDoItemResponse(Guid Id,
     TimeOnly StartTime,
     TimeOnly EndTime,
     string Description,
-    bool IsDone);
+    bool IsDone,
+    bool IsBasedOnHabit);

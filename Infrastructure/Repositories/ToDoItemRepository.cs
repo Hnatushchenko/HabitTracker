@@ -62,6 +62,14 @@ public class ToDoItemRepository : IToDoItemRepository
         _applicationContext.HabitToDoItems.Add(habitToDoItem);
     }
 
+    public async Task<bool> CheckToDoItemHabitAssociationAsync(ToDoItemId toDoItemId)
+    {
+        var queryResult = await _applicationContext.HabitToDoItems.FirstOrDefaultAsync(habitToDoItem =>
+            habitToDoItem.ToDoItemId == toDoItemId);
+        var result = queryResult is null;
+        return result;
+    }
+
     public async Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId)
     {
         var habitToDoItemsToRemove = await _applicationContext.HabitToDoItems

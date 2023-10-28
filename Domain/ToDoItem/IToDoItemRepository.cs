@@ -14,4 +14,5 @@ public interface IToDoItemRepository : IRepository<ToDoItem, ToDoItemId>
     Task<List<HabitToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate);
     void AddToDoItemForHabit(ToDoItem toDoItem, HabitId habitId);
     Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId);
+    Task<bool> CheckToDoItemHabitAssociationAsync(ToDoItemId toDoItemId);
 }

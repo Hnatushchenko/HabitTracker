@@ -1,5 +1,4 @@
-﻿using Application.Habits.Get;
-using Application.Interfaces.Creators;
+﻿using Application.Interfaces.Creators;
 using Domain.ToDoItem;
 using MediatR;
 
@@ -21,11 +20,19 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
         var targetDate = request.TargetDate;
         await _habitsBasedToDoItemsCreator.EnsureHabitsBasedToDoItemsCreatedAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateAsync(targetDate);
-        var toDoItemResponseList = toDoItems.Select(toDoItem => new ToDoItemResponse(toDoItem.Id.Value,
-            toDoItem.StartTime,
-            toDoItem.EndTime,
-            toDoItem.Description,
-            toDoItem.IsDone));
+        var toDoItemResponseList = new List<ToDoItemResponse>(toDoItems.Count);
+        foreach (var toDoItem in toDoItems)
+        {
+            var isToDoItemAssociatedWithHabit = await _toDoItemRepository.CheckToDoItemHabitAssociationAsync(toDoItem.Id);
+            var toDoItemResponse = new ToDoItemResponse(toDoItem.Id.Value,
+                toDoItem.StartTime,
+                toDoItem.EndTime,
+                toDoItem.Description,
+                toDoItem.IsDone,
+                isToDoItemAssociatedWithHabit
+            );
+            toDoItemResponseList.Add(toDoItemResponse);
+        }
         return toDoItemResponseList;
     }
 }
