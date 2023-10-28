@@ -8,5 +8,5 @@ public sealed class Habit
     public required FrequencyCount FrequencyCount { get; set; } 
     public required DateTimeOffset StartDate { get; set; }
     public bool IsArchived { get; set; }
-    public List<ToDoItem.ToDoItem>? ToDoItems { get; set; }
+    public List<ToDoItem.ToDoItem> ToDoItems { get; } = new();
 }
