@@ -1,4 +1,5 @@
-﻿using Domain.Habit;
+﻿using Application.Data;
+using Domain.Habit;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;

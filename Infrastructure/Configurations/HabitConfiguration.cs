@@ -10,8 +10,9 @@ public sealed class HabitConfiguration : IEntityTypeConfiguration<Habit>
     {
         builder.HasKey(h => h.Id);
         builder.Property(h => h.Id)
-            .HasConversion(habitId => habitId.Value, value => HabitId.From(value));
+            .HasConversion(habitId => habitId.Value, value => new HabitId(value));
         builder.Property(h => h.FrequencyCount)
             .HasConversion(frequencyCount => frequencyCount.Value, value => FrequencyCount.From(value));
+        builder.HasMany(h => h.ToDoItems);
     }
 }

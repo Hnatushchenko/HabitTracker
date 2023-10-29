@@ -20,7 +20,7 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
     {
         var habit = new Habit
         {
-            Id = HabitId.From(Guid.NewGuid()),
+            Id = new HabitId(Guid.NewGuid()),
             Description = request.Description,
             FrequencyTimeUnit = request.TimeUnit,
             FrequencyCount = FrequencyCount.From(request.FrequencyCount),

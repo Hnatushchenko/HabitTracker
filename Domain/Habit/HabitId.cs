@@ -1,7 +1,4 @@
 ﻿using ValueOf;
 
 namespace Domain.Habit;
-public sealed class HabitId : ValueOf<Guid, HabitId>
-{
-    
-}
+public sealed record HabitId(Guid Value);

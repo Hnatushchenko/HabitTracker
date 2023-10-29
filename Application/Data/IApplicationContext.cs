@@ -2,7 +2,7 @@
 using Domain.ToDoItem;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace Application.Data;
 
 public interface IApplicationContext
 {
