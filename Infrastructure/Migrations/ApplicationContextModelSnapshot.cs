@@ -43,6 +43,10 @@ namespace Infrastructure.Migrations
                     b.Property<DateTimeOffset>("StartDate")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("ToDoItemDescription")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.ToTable("Habits");

@@ -24,7 +24,8 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
             Description = request.Description,
             FrequencyTimeUnit = request.TimeUnit,
             FrequencyCount = FrequencyCount.From(request.FrequencyCount),
-            StartDate = request.StartDate
+            StartDate = request.StartDate,
+            ToDoItemDescription = request.ToDoItemDescription
         };
         _habitRepository.Add(habit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
