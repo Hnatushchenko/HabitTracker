@@ -2,4 +2,8 @@
 
 namespace Application.Habits.Get;
 
-public sealed record HabitResponse(Guid Id, string Description, TimeUnit FrequencyTimeUnit, int FrequencyCount);
+public sealed record HabitResponse(Guid Id,
+    string Description,
+    TimeUnit FrequencyTimeUnit,
+    int FrequencyCount,
+    int Streak);
