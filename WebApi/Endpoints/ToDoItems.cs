@@ -1,5 +1,6 @@
 ﻿using Application.ToDoItems.Create;
 using Application.ToDoItems.Delete;
+using Application.ToDoItems.DueTomorrow;
 using Application.ToDoItems.Get;
 using Application.ToDoItems.Update.Details;
 using Application.ToDoItems.Update.IsDone;
@@ -37,7 +38,7 @@ public sealed class ToDoItems : ICarterModule
 
         app.MapPatch("to-do-items/is-done/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request, ISender sender) =>
         {
-            var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(ToDoItemId.From(id),
+            var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(new ToDoItemId(id),
                 request.NewIsDoneValue);
             var updateOperationResult = await sender.Send(updateToDoItemIdDoneCommand);
             var result = updateOperationResult.Match(updated => Results.NoContent(),
@@ -47,12 +48,19 @@ public sealed class ToDoItems : ICarterModule
         
         app.MapPatch("to-do-items/details/{id:guid}", async (Guid id, UpdateToDoItemDetailsRequest request, ISender sender) =>
         {
-            var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(ToDoItemId.From(id),
+            var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(new ToDoItemId(id),
                 request.StartTime, request.EndTime, request.Description);
             var updateOperationResult = await sender.Send(updateToDoItemDetailsCommand);
             var result = updateOperationResult.Match(updated => Results.NoContent(),
                 notFound => Results.NotFound());
             return result;
+        });
+
+        app.MapPatch("to-do-items/{id:guid}/due-tomorrow", async (Guid id, ISender sender) =>
+        {
+            var dueToDoItemTomorrowCommand = new DueToDoItemTomorrowCommand(new ToDoItemId(id));
+            await sender.Send(dueToDoItemTomorrowCommand);
+            return Results.NoContent();
         });
         
         app.MapPost("to-do-items", async (CreateToDoItemCommand command, ISender sender) =>
@@ -63,7 +71,7 @@ public sealed class ToDoItems : ICarterModule
 
         app.MapDelete("to-do-items/{id:guid}", async (Guid id, ISender sender) =>
         {
-            var deleteToDoItemCommand = new DeleteToDoItemCommand(ToDoItemId.From(id));
+            var deleteToDoItemCommand = new DeleteToDoItemCommand(new ToDoItemId(id));
             var deleteOperationResult = await sender.Send(deleteToDoItemCommand);
             var result = deleteOperationResult.Match(deleted => Results.NoContent(),
                 notFound => Results.NotFound());

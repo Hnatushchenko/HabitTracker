@@ -1,8 +1,3 @@
-﻿using ValueOf;
+﻿namespace Domain.ToDoItem;
 
-namespace Domain.ToDoItem;
-
-public sealed class ToDoItemId : ValueOf<Guid, ToDoItemId>
-{
-    
-}
+public sealed record ToDoItemId(Guid Value);

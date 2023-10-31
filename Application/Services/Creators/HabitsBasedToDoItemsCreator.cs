@@ -30,7 +30,7 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
             {
                 var toDoItem = new ToDoItem()
                 {
-                    Id = ToDoItemId.From(Guid.NewGuid()),
+                    Id = new ToDoItemId(Guid.NewGuid()),
                     Description = habit.ToDoItemDescription,
                     DueDate = targetDate,
                     StartTime = TimeOnly.MinValue,

@@ -20,7 +20,7 @@ public sealed class CreateToDoItemCommandHandler : IRequestHandler<CreateToDoIte
     {
         var toDoItem = new ToDoItem()
         {
-            Id = ToDoItemId.From(Guid.NewGuid()),
+            Id = new ToDoItemId(Guid.NewGuid()),
             Description = request.Description,
             StartTime = request.StartTime,
             EndTime = request.EndTime,

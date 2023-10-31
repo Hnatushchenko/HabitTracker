@@ -11,7 +11,7 @@ public sealed class ToDoItemConfiguration : IEntityTypeConfiguration<ToDoItem>
     {
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Id)
-            .HasConversion(toDoItemId => toDoItemId.Value, value => ToDoItemId.From(value));
+            .HasConversion(toDoItemId => toDoItemId.Value, value => new ToDoItemId(value));
         builder.Property(t => t.EndTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
         builder.Property(t => t.StartTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
         builder.ToTable(t => t.HasCheckConstraint(nameof(ToDoItem.StartTime),
