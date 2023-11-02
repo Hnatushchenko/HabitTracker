@@ -33,8 +33,8 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
                     Id = new ToDoItemId(Guid.NewGuid()),
                     Description = habit.ToDoItemDescription,
                     DueDate = targetDate,
-                    StartTime = TimeOnly.MinValue,
-                    EndTime = TimeOnly.MinValue,
+                    StartTime = habit.DefaultStartTime,
+                    EndTime = habit.DefaultEndTime,
                 };
                 _toDoItemRepository.AddToDoItemForHabit(toDoItem, habit.Id);
             }

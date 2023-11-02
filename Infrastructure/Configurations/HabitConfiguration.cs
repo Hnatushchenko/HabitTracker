@@ -14,5 +14,7 @@ public sealed class HabitConfiguration : IEntityTypeConfiguration<Habit>
         builder.Property(h => h.FrequencyCount)
             .HasConversion(frequencyCount => frequencyCount.Value, value => FrequencyCount.From(value));
         builder.HasMany(h => h.ToDoItems);
+        builder.Property(t => t.DefaultEndTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
+        builder.Property(t => t.DefaultStartTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
     }
 }
