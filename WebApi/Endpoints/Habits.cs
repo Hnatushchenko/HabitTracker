@@ -3,6 +3,7 @@ using Application.Habits.Create;
 using Application.Habits.Delete;
 using Application.Habits.Get;
 using Application.Habits.Statistic.Get;
+using Application.Habits.Update;
 using Carter;
 using Domain.Habit;
 using MediatR;
@@ -26,6 +27,20 @@ public class Habits : ICarterModule
             var result = updateOperationResult.Match(success => Results.NoContent(),
                 notFound => Results.NotFound());
             return result;
+        });
+        
+        app.MapPatch("habits/{id:guid}", async (Guid id, UpdateHabitDetailsRequest request, ISender sender) =>
+        {
+            var updateHabitDetailsCommand = new UpdateHabitDetailsCommand
+            {
+                HabitId = new HabitId(id),
+                ToDoItemDescription = request.ToDoItemDescription,
+                DefaultStartTime = request.DefaultStartTime,
+                DefaultEndTime = request.DefaultEndTime,
+                Description = request.Description
+            };
+            await sender.Send(updateHabitDetailsCommand);
+            return Results.NoContent();
         });
         
         app.MapPost("habits", async (CreateHabitCommand command, ISender sender) =>

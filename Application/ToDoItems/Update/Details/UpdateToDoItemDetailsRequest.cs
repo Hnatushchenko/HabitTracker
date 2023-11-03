@@ -9,4 +9,6 @@ using System.Threading.Tasks;
 
 namespace Application.ToDoItems.Update.Details;
 
-public sealed record UpdateToDoItemDetailsRequest(TimeOnly StartTime, TimeOnly EndTime, string Description) : IRequest<UpdatedOrNotFound>;
+public sealed record UpdateToDoItemDetailsRequest(TimeOnly StartTime,
+    TimeOnly EndTime,
+    string Description);

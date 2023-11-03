@@ -38,12 +38,17 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
                     yesterday = yesterday.AddDays(-1);
                 }
             }
-            var habitResponse = new HabitResponse(
-                habit.Id.Value,
-                habit.Description,
-                habit.FrequencyTimeUnit,
-                habit.FrequencyCount.Value,
-                streak);
+            var habitResponse = new HabitResponse
+            {
+                Id = habit.Id.Value,
+                Description = habit.Description,
+                FrequencyTimeUnit = habit.FrequencyTimeUnit,
+                FrequencyCount = habit.FrequencyCount.Value,
+                Streak = streak,
+                DefaultStartTime = habit.DefaultStartTime,
+                DefaultEndTime = habit.DefaultEndTime,
+                ToDoItemDescription = habit.ToDoItemDescription
+            };
             habitResponseList.Add(habitResponse);
         }
         return habitResponseList;
