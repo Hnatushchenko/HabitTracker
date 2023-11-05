@@ -23,12 +23,20 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
     
     public async Task<GetHabitStatisticResponse> Handle(GetHabitStatisticQuery request, CancellationToken cancellationToken)
     {
-        var habitCompletionDates = await _applicationContext.HabitToDoItems
+        var dateBasedHabitStatuses = await _applicationContext.HabitToDoItems
                 .Include(habitToDoItem => habitToDoItem.ToDoItem)
-                .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId && habitToDoItem.ToDoItem!.IsDone)
-                .Select(habitToDoItem => habitToDoItem.ToDoItem!.DueDate)
-                .ToListAsync(cancellationToken: cancellationToken);
-        var getHabitStatisticResponse = new GetHabitStatisticResponse(habitCompletionDates);
+                .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId)
+                .Select(habitToDoItem => new DateBasedHabitStatus
+                {
+                    Date = habitToDoItem.ToDoItem.DueDate,
+                    IsCompleted = habitToDoItem.ToDoItem.IsDone
+                })
+                .Where(dateBasedHabitStatus => dateBasedHabitStatus.Date <= DateTimeOffset.UtcNow.Date)
+                .ToListAsync(cancellationToken);
+        var getHabitStatisticResponse = new GetHabitStatisticResponse
+        {
+            DateBasedHabitStatuses = dateBasedHabitStatuses
+        };
         return getHabitStatisticResponse;
     }
 }

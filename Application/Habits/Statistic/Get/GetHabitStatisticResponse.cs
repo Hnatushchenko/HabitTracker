@@ -1,3 +1,8 @@
-﻿namespace Application.Habits.Statistic.Get;
+﻿using Domain.Habit;
 
-public sealed record GetHabitStatisticResponse(IReadOnlyCollection<DateTimeOffset> HabitCompletionDates);
+namespace Application.Habits.Statistic.Get;
+
+public sealed record GetHabitStatisticResponse
+{
+    public required IReadOnlyCollection<DateBasedHabitStatus> DateBasedHabitStatuses { get; init; }
+}

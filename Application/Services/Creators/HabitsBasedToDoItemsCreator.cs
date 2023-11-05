@@ -28,7 +28,7 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
         {
             if (toDoItems.All(toDoItem => toDoItem.Habit!.Id != habit.Id))
             {
-                var toDoItem = new ToDoItem()
+                var toDoItem = new ToDoItem
                 {
                     Id = new ToDoItemId(Guid.NewGuid()),
                     Description = habit.ToDoItemDescription,

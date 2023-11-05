@@ -22,7 +22,9 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
         foreach (var habit in habits)
         {
             var statistic = await _sender.Send(new GetHabitStatisticQuery(habit.Id), cancellationToken);
-            var datesOnly = statistic.HabitCompletionDates.Select(dateTime => dateTime.UtcDateTime.Date).ToHashSet();
+            var datesOnly = statistic.DateBasedHabitStatuses
+                .Where(dateBasedHabitStatus => dateBasedHabitStatus.IsCompleted)
+                .Select(dateBasedHabitStatus => dateBasedHabitStatus.Date.Date).ToHashSet();
             var yesterday = DateTimeOffset.UtcNow.AddDays(-1).UtcDateTime.Date;
             var streak = 0;
             if (datesOnly.Contains(DateTimeOffset.UtcNow.UtcDateTime.Date))

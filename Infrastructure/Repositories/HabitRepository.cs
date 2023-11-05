@@ -1,4 +1,5 @@
 ﻿using Application.Data;
+using Application.Habits.Calculations;
 using Domain.Habit;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
@@ -8,10 +9,13 @@ namespace Infrastructure.Repositories;
 
 public class HabitRepository : IHabitRepository
 {
+    private readonly IHabitOccurrencesCalculator _habitOccurrencesCalculator;
     private readonly IApplicationContext _applicationContext;
 
-    public HabitRepository(IApplicationContext applicationContext)
+    public HabitRepository(IHabitOccurrencesCalculator habitOccurrencesCalculator,
+        IApplicationContext applicationContext)
     {
+        _habitOccurrencesCalculator = habitOccurrencesCalculator;
         _applicationContext = applicationContext;
     }
     public async Task<List<Habit>> GetAllAsync()
@@ -36,36 +40,10 @@ public class HabitRepository : IHabitRepository
         var activeHabits = await _applicationContext.Habits
             .Where(habit => !habit.IsArchived)
             .ToListAsync();
-        var filteredHabits = activeHabits.Where(habit => ShouldHabitOccur(habit, targetDate)).ToList();
+        var filteredHabits = activeHabits
+            .Where(habit => _habitOccurrencesCalculator.ShouldHabitOccurOnSpecifiedDate(habit, targetDate))
+            .ToList();
         return filteredHabits;
-
-        bool ShouldHabitOccur(Habit habit, DateTimeOffset date)
-        {
-            var startDate = habit.StartDate;
-            if (startDate.UtcDateTime.Date == date.UtcDateTime.Date)
-            {
-                return true;
-            }
-
-            var runner = habit.StartDate;
-            while (runner.UtcDateTime.Date < targetDate.UtcDateTime.Date)
-            {
-                runner = habit.FrequencyTimeUnit switch
-                {
-                    TimeUnit.Day => runner.AddDays(habit.FrequencyCount.Value),
-                    TimeUnit.Week => runner.AddDays(habit.FrequencyCount.Value * 7),
-                    TimeUnit.Month => runner.AddMonths(habit.FrequencyCount.Value),
-                    TimeUnit.Year => runner.AddYears(habit.FrequencyCount.Value),
-                    _ => throw new ArgumentOutOfRangeException(nameof(targetDate))
-                };
-                if (runner.UtcDateTime.Date == targetDate.UtcDateTime.Date)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
     }
 
     public void Add(Habit habit)
