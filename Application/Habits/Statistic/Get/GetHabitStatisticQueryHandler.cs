@@ -9,34 +9,33 @@ namespace Application.Habits.Statistic.Get;
 public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStatisticQuery, GetHabitStatisticResponse>
 {
     private readonly IApplicationContext _applicationContext;
-    private readonly IToDoItemRepository _toDoItemRepository;
-    private readonly IHabitRepository _habitRepository;
 
-    public GetHabitStatisticQueryHandler(IToDoItemRepository toDoItemRepository,
-        IHabitRepository habitRepository,
-        IApplicationContext applicationContext)
+    public GetHabitStatisticQueryHandler(IApplicationContext applicationContext)
     {
-        _toDoItemRepository = toDoItemRepository;
-        _habitRepository = habitRepository;
         _applicationContext = applicationContext;
     }
     
     public async Task<GetHabitStatisticResponse> Handle(GetHabitStatisticQuery request, CancellationToken cancellationToken)
     {
-        var dateBasedHabitStatuses = await _applicationContext.HabitToDoItems
-                .Include(habitToDoItem => habitToDoItem.ToDoItem)
-                .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId)
-                .Select(habitToDoItem => new DateBasedHabitStatus
-                {
-                    Date = habitToDoItem.ToDoItem.DueDate,
-                    IsCompleted = habitToDoItem.ToDoItem.IsDone
-                })
-                .Where(dateBasedHabitStatus => dateBasedHabitStatus.Date <= DateTimeOffset.UtcNow.Date)
-                .ToListAsync(cancellationToken);
-        var getHabitStatisticResponse = new GetHabitStatisticResponse
+        var allDateBasedHabitStatuses = _applicationContext.HabitToDoItems
+            .Include(habitToDoItem => habitToDoItem.ToDoItem)
+            .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId)
+            .Select(habitToDoItem => new DateBasedHabitStatus
+            {
+                Date = habitToDoItem.ToDoItem!.DueDate,
+                IsCompleted = habitToDoItem.ToDoItem.IsDone
+            })
+            .AsAsyncEnumerable()
+            .WithCancellation(cancellationToken);
+        var filteredDateBasedHabitStatuses = new List<DateBasedHabitStatus>();
+        await foreach (var dateBasedHabitStatus in allDateBasedHabitStatuses)
         {
-            DateBasedHabitStatuses = dateBasedHabitStatuses
-        };
+            if (dateBasedHabitStatus.Date.UtcDateTime.Date <= DateTimeOffset.UtcNow.Date)
+            {
+                filteredDateBasedHabitStatuses.Add(dateBasedHabitStatus);
+            }
+        }
+        var getHabitStatisticResponse = new GetHabitStatisticResponse(filteredDateBasedHabitStatuses);
         return getHabitStatisticResponse;
     }
 }
