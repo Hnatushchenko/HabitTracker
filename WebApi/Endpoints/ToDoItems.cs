@@ -38,9 +38,9 @@ public sealed class ToDoItems : ICarterModule
             return Results.Ok(toDoItems);
         });
 
-        app.MapPatch("to-do-items/is-done/{id:guid}", async (Guid id, UpdateToDoItemIsDoneRequest request, ISender sender) =>
+        app.MapPatch("to-do-items/is-done/{toDoItemId:guid}", async (ToDoItemId toDoItemId, UpdateToDoItemIsDoneRequest request, ISender sender) =>
         {
-            var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(new ToDoItemId(id),
+            var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(toDoItemId,
                 request.NewIsDoneValue);
             var updateOperationResult = await sender.Send(updateToDoItemIdDoneCommand);
             var result = updateOperationResult.Match(updated => Results.NoContent(),
@@ -48,9 +48,9 @@ public sealed class ToDoItems : ICarterModule
             return result;
         });
         
-        app.MapPatch("to-do-items/details/{id:guid}", async (Guid id, UpdateToDoItemDetailsRequest request, ISender sender) =>
+        app.MapPatch("to-do-items/details/{toDoItemId:guid}", async (ToDoItemId toDoItemId, UpdateToDoItemDetailsRequest request, ISender sender) =>
         {
-            var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(new ToDoItemId(id),
+            var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(toDoItemId,
                 request.StartTime, request.EndTime, request.Description);
             var updateOperationResult = await sender.Send(updateToDoItemDetailsCommand);
             var result = updateOperationResult.Match(updated => Results.NoContent(),
@@ -58,16 +58,16 @@ public sealed class ToDoItems : ICarterModule
             return result;
         });
 
-        app.MapPatch("to-do-items/{id:guid}/due-tomorrow", async (Guid id, ISender sender) =>
+        app.MapPatch("to-do-items/{toDoItemId:guid}/due-tomorrow", async (ToDoItemId toDoItemId, ISender sender) =>
         {
-            var dueToDoItemTomorrowCommand = new DueToDoItemTomorrowCommand(new ToDoItemId(id));
+            var dueToDoItemTomorrowCommand = new DueToDoItemTomorrowCommand(toDoItemId);
             await sender.Send(dueToDoItemTomorrowCommand);
             return Results.NoContent();
         });
         
-        app.MapPatch("to-do-items/{id:guid}/hide-for-the-rest-of-the-day", async (Guid id, ISender sender) =>
+        app.MapPatch("to-do-items/{toDoItemId:guid}/hide-for-the-rest-of-the-day", async (ToDoItemId toDoItemId, ISender sender) =>
         {
-            var command = new HideToDoItemForTheRestOfTheDayCommand(new ToDoItemId(id));
+            var command = new HideToDoItemForTheRestOfTheDayCommand(toDoItemId);
             await sender.Send(command);
             return Results.NoContent();
         });
@@ -78,9 +78,9 @@ public sealed class ToDoItems : ICarterModule
             return Results.Ok();
         });
 
-        app.MapDelete("to-do-items/{id:guid}", async (Guid id, ISender sender) =>
+        app.MapDelete("to-do-items/{toDoItemId}", async (ToDoItemId toDoItemId, ISender sender) =>
         {
-            var deleteToDoItemCommand = new DeleteToDoItemCommand(new ToDoItemId(id));
+            var deleteToDoItemCommand = new DeleteToDoItemCommand(toDoItemId);
             var deleteOperationResult = await sender.Send(deleteToDoItemCommand);
             var result = deleteOperationResult.Match(deleted => Results.NoContent(),
                 notFound => Results.NotFound());
