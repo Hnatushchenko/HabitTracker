@@ -32,9 +32,12 @@ public class ToDoItemRepository : IToDoItemRepository
     /// <inheritdoc/>
     public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate)
     {
+        var utcNow = DateTimeOffset.UtcNow;
         var toDoItems = (await _applicationContext.ToDoItems
             .ToListAsync())
-            .Where(toDoItem => toDoItem.DueDate.HasSameUtcDateAs(dueDate) && !toDoItem.IsHiddenOnDueDate)
+            .Where(toDoItem => toDoItem.DueDate.HasUtcDateEqualTo(dueDate) &&
+                               !(toDoItem.IsHiddenOnDueDate &&
+                                 toDoItem.DueDate.HasUtcDateEqualTo(utcNow)))
             .ToList();
         return toDoItems;
     }
@@ -45,7 +48,7 @@ public class ToDoItemRepository : IToDoItemRepository
             .Include(habitToDoItem => habitToDoItem.Habit)
             .Include(habitToDoItem => habitToDoItem.ToDoItem)
             .ToListAsync())
-            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.HasSameUtcDateAs(dueDate)).ToList();
+            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.HasUtcDateEqualTo(dueDate)).ToList();
         return toDoItems;
     }
 

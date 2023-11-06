@@ -1,4 +1,5 @@
 ﻿using Application.Data;
+using Application.Extensions;
 using Domain.Habit;
 using Domain.ToDoItem;
 using MediatR;
@@ -17,6 +18,7 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
     
     public async Task<GetHabitStatisticResponse> Handle(GetHabitStatisticQuery request, CancellationToken cancellationToken)
     {
+        var utcNow = DateTimeOffset.Now;
         var allDateBasedHabitStatuses = _applicationContext.HabitToDoItems
             .Include(habitToDoItem => habitToDoItem.ToDoItem)
             .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId)
@@ -30,7 +32,8 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
         var filteredDateBasedHabitStatuses = new List<DateBasedHabitStatus>();
         await foreach (var dateBasedHabitStatus in allDateBasedHabitStatuses)
         {
-            if (dateBasedHabitStatus.Date.UtcDateTime.Date <= DateTimeOffset.UtcNow.Date)
+            if (dateBasedHabitStatus.Date.HasUtcDateLessThen(utcNow) || 
+                (dateBasedHabitStatus.Date.HasUtcDateEqualTo(utcNow) && dateBasedHabitStatus.IsCompleted))
             {
                 filteredDateBasedHabitStatuses.Add(dateBasedHabitStatus);
             }

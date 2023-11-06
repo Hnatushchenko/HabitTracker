@@ -9,13 +9,13 @@ public sealed class HabitOccurrencesCalculator : IHabitOccurrencesCalculator
     public bool ShouldHabitOccurOnSpecifiedDate(Habit habit, DateTimeOffset targetDate)
     {
         var startDate = habit.StartDate;
-        if (startDate.HasSameUtcDateAs(targetDate))
+        if (startDate.HasUtcDateEqualTo(targetDate))
         {
             return true;
         }
 
         var runner = habit.StartDate;
-        while (runner.UtcDateTime.Date < targetDate.UtcDateTime.Date)
+        while (runner.HasUtcDateLessThen(targetDate))
         {
             runner = habit.FrequencyTimeUnit switch
             {
@@ -25,7 +25,7 @@ public sealed class HabitOccurrencesCalculator : IHabitOccurrencesCalculator
                 TimeUnit.Year => runner.AddYears(habit.FrequencyCount.Value),
                 _ => throw new ArgumentOutOfRangeException(nameof(targetDate))
             };
-            if (runner.HasSameUtcDateAs(targetDate))
+            if (runner.HasUtcDateEqualTo(targetDate))
             {
                 return true;
             }
