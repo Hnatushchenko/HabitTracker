@@ -1,4 +1,5 @@
 ﻿using Application.Data;
+using Application.Extensions;
 using Domain.Habit;
 using Domain.ToDoItem;
 using Microsoft.EntityFrameworkCore;
@@ -29,11 +30,12 @@ public class ToDoItemRepository : IToDoItemRepository
     }
 
     /// <inheritdoc/>
-    public async Task<List<ToDoItem>> GetByDueDateAsync(DateTimeOffset dueDate)
+    public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate)
     {
         var toDoItems = (await _applicationContext.ToDoItems
             .ToListAsync())
-            .Where(toDoItem => toDoItem.DueDate.UtcDateTime.Date == dueDate.Date).ToList();
+            .Where(toDoItem => toDoItem.DueDate.HasSameUtcDateAs(dueDate) && !toDoItem.IsHiddenOnDueDate)
+            .ToList();
         return toDoItems;
     }
 
@@ -43,7 +45,7 @@ public class ToDoItemRepository : IToDoItemRepository
             .Include(habitToDoItem => habitToDoItem.Habit)
             .Include(habitToDoItem => habitToDoItem.ToDoItem)
             .ToListAsync())
-            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.UtcDateTime.Date == dueDate.Date).ToList();
+            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.HasSameUtcDateAs(dueDate)).ToList();
         return toDoItems;
     }
 

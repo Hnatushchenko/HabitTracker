@@ -3,6 +3,7 @@ using Application.ToDoItems.Create;
 using Application.ToDoItems.Delete;
 using Application.ToDoItems.DueTomorrow;
 using Application.ToDoItems.Get;
+using Application.ToDoItems.HideForTheRestOfTheDay;
 using Application.ToDoItems.Update.Details;
 using Application.ToDoItems.Update.IsDone;
 using Carter;
@@ -61,6 +62,13 @@ public sealed class ToDoItems : ICarterModule
         {
             var dueToDoItemTomorrowCommand = new DueToDoItemTomorrowCommand(new ToDoItemId(id));
             await sender.Send(dueToDoItemTomorrowCommand);
+            return Results.NoContent();
+        });
+        
+        app.MapPatch("to-do-items/{id:guid}/hide-for-the-rest-of-the-day", async (Guid id, ISender sender) =>
+        {
+            var command = new HideToDoItemForTheRestOfTheDayCommand(new ToDoItemId(id));
+            await sender.Send(command);
             return Results.NoContent();
         });
         

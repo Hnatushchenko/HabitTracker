@@ -7,5 +7,6 @@ public sealed class ToDoItem
     public required TimeOnly EndTime { get; set; }
     public required string Description { get; set; }
     public required DateTimeOffset DueDate { get; set; }
+    public bool IsHiddenOnDueDate { get; set; }
     public bool IsDone { get; set; }
 }
