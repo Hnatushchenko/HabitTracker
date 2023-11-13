@@ -1,5 +1,6 @@
 ﻿using Application.Data;
 using Domain;
+using Domain.BadHabit;
 using Domain.Habit;
 using Domain.ToDoItem;
 using Infrastructure.Repositories;
@@ -15,5 +16,6 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         services.AddScoped<IHabitRepository, HabitRepository>();
         services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
+        services.AddScoped<IBadHabitRepository, BadHabitRepository>();
     }
 }

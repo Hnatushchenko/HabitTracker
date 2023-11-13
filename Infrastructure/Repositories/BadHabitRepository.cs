@@ -21,4 +21,9 @@ public class BadHabitRepository : IBadHabitRepository
         };
         _applicationContext.BadHabitOccurrences.Add(badHabitOccurence);
     }
+
+    public void AddBadHabit(BadHabit badHabit)
+    {
+        _applicationContext.BadHabits.Add(badHabit);
+    }
 }
