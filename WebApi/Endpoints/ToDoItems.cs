@@ -1,5 +1,4 @@
-﻿using Application.Data;
-using Application.ToDoItems.Create;
+﻿using Application.ToDoItems.Create;
 using Application.ToDoItems.Delete;
 using Application.ToDoItems.DueTomorrow;
 using Application.ToDoItems.Get;
@@ -18,13 +17,14 @@ public sealed class ToDoItems : ICarterModule
     public void AddRoutes(IEndpointRouteBuilder app)
     {
         
-        app.MapGet("to-do-items/{targetDate}", async (CancellationToken token, IApplicationContext applicationContext, [FromRoute] DateTimeOffset targetDate, ISender sender) =>
+        app.MapGet("to-do-items/{targetDate}", async (CancellationToken cancellationToken,
+            [FromRoute] DateTimeOffset targetDate, ISender sender) =>
         {
             var getToDoItemsQuery = new GetToDoItemsQuery
             {
                 TargetDate = targetDate
             };
-            var toDoItems2 = await sender.Send(getToDoItemsQuery);
+            var toDoItems2 = await sender.Send(getToDoItemsQuery, cancellationToken);
             return Results.Ok(toDoItems2);
         });
         
