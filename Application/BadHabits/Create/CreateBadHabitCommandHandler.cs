@@ -21,7 +21,8 @@ public sealed class CreateBadHabitCommandHandler : IRequestHandler<CreateBadHabi
         var badHabit = new BadHabit
         {
             Id = new BadHabitId(Guid.NewGuid()),
-            Description = request.Description
+            Description = request.Description,
+            StartDate = DateTimeOffset.UtcNow,
         };
         _badHabitRepository.AddBadHabit(badHabit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
