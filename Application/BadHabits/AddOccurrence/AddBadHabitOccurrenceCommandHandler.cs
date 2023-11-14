@@ -1,10 +1,12 @@
 ﻿using Domain;
 using Domain.BadHabit;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using OneOf.Types;
 
 namespace Application.BadHabits.AddOccurrence;
 
-public class AddBadHabitOccurrenceCommandHandler : IRequestHandler<AddBadHabitOccurrenceCommand>
+public class AddBadHabitOccurrenceCommandHandler : IRequestHandler<AddBadHabitOccurrenceCommand, SuccessOrDuplicateBadHabitOccurrenceError>
 {
     private readonly IBadHabitRepository _badHabitRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -16,9 +18,17 @@ public class AddBadHabitOccurrenceCommandHandler : IRequestHandler<AddBadHabitOc
         _unitOfWork = unitOfWork;
     }
     
-    public async Task Handle(AddBadHabitOccurrenceCommand request, CancellationToken cancellationToken)
+    public async Task<SuccessOrDuplicateBadHabitOccurrenceError> Handle(AddBadHabitOccurrenceCommand request, CancellationToken cancellationToken)
     {
-        _badHabitRepository.AddOccurrence(request.BadHabitId, request.OccurrenceDate);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
+        try
+        {
+            _badHabitRepository.AddOccurrence(request.BadHabitId, request.OccurrenceDate);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
+            return new Success();
+        }
+        catch (DbUpdateException)
+        {
+            return DuplicateBadHabitOccurrenceError.Instance;
+        }
     }
 }

@@ -6,6 +6,7 @@ using Application.BadHabits.GetStatistic.GetBadHabitStatistic;
 using Carter;
 using Domain.BadHabit;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApi.Endpoints;
 
@@ -49,8 +50,20 @@ public sealed class BadHabits : ICarterModule
                 OccurrenceDate = request.OccurrenceDate,
                 BadHabitId = new BadHabitId(id)
             };
-            await sender.Send(addBadHabitOccurrenceCommand, cancellationToken);
-            return Results.NoContent();
+            var successOrError = await sender.Send(addBadHabitOccurrenceCommand, cancellationToken);
+            var actionResult = successOrError.Match(
+                success => Results.NoContent(),
+                error => Results.Conflict(new
+                {
+                    Message = "Cannot add duplicate occurrence of the bad habit. An occurrence with the specified date already exists.",
+                    Details = new
+                    {
+                        BadHabitId = id,
+                        request.OccurrenceDate
+                    }
+                })
+            );
+            return actionResult;
         });
 
         app.MapDelete("bad-habits/{id:guid}", async (Guid id,
