@@ -1,10 +1,10 @@
 ﻿using Application.BadHabits.AddOccurrence;
 using Application.BadHabits.Create;
+using Application.BadHabits.Delete;
 using Application.BadHabits.Get;
 using Application.BadHabits.GetStatistic.GetBadHabitStatistic;
 using Carter;
 using Domain.BadHabit;
-using Domain.Habit;
 using MediatR;
 
 namespace WebApi.Endpoints;
@@ -50,6 +50,18 @@ public sealed class BadHabits : ICarterModule
                 BadHabitId = new BadHabitId(id)
             };
             await sender.Send(addBadHabitOccurrenceCommand, cancellationToken);
+            return Results.NoContent();
+        });
+
+        app.MapDelete("bad-habits/{id:guid}", async (Guid id,
+            ISender sender,
+            CancellationToken cancellationToken) =>
+        {
+            var deleteBadHabitCommand = new DeleteBadHabitCommand
+            {
+                BadHabitId = new BadHabitId(id)
+            };
+            await sender.Send(deleteBadHabitCommand, cancellationToken);
             return Results.NoContent();
         });
     }

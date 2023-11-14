@@ -26,4 +26,14 @@ public class BadHabitRepository : IBadHabitRepository
     {
         _applicationContext.BadHabits.Add(badHabit);
     }
+
+    public void Remove(BadHabit badHabit)
+    {
+        _applicationContext.BadHabits.Remove(badHabit);
+    }
+
+    public async Task<BadHabit?> GetById(BadHabitId badHabitId, CancellationToken cancellationToken)
+    {
+        return await _applicationContext.BadHabits.FindAsync(badHabitId, cancellationToken);
+    }
 }
