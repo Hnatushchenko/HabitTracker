@@ -1,6 +1,7 @@
 ﻿using Application.BadHabits.AddOccurrence;
 using Application.BadHabits.Create;
 using Application.BadHabits.Delete;
+using Application.BadHabits.DeleteOccurrence;
 using Application.BadHabits.Get;
 using Application.BadHabits.GetStatistic.GetBadHabitStatistic;
 using Carter;
@@ -64,6 +65,20 @@ public sealed class BadHabits : ICarterModule
                 })
             );
             return actionResult;
+        });
+
+        app.MapPatch("bad-habits/{id:guid}/remove-occurrence", async (Guid id,
+            ISender sender,
+            DeleteBadHabitOccurrenceRequest request,
+            CancellationToken cancellationToken) =>
+        {
+            var deleteBadHabitOccurrenceCommand = new DeleteBadHabitOccurrenceCommand
+            {
+                OccurrenceDate = request.OccurrenceDate,
+                BadHabitId = new BadHabitId(id)
+            };
+            await sender.Send(deleteBadHabitOccurrenceCommand, cancellationToken);
+            return Results.NoContent();
         });
 
         app.MapDelete("bad-habits/{id:guid}", async (Guid id,
