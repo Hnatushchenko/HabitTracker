@@ -56,7 +56,7 @@ public sealed class BadHabits : ICarterModule
                 success => Results.NoContent(),
                 error => Results.Conflict(new
                 {
-                    Message = "Cannot add duplicate occurrence of the bad habit. An occurrence with the specified date already exists.",
+                    Message = "Validation Error! Cannot add duplicate occurrence of the bad habit. An occurrence with the specified date already exists.",
                     Details = new
                     {
                         BadHabitId = id,
