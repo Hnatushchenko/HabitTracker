@@ -1,4 +1,5 @@
 ﻿using Application.Data;
+using Domain.BadHabit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,22 +19,30 @@ public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery
         var badHabits = await _applicationContext.BadHabits
             .Include(badHabit => badHabit.Occurrences)
             .ToListAsync(cancellationToken);
-        var badHabitResponseList = new List<BadHabitResponse>(badHabits.Count);
-        foreach (var badHabit in badHabits)
+        var badHabitResponseList = new BadHabitResponse[badHabits.Count];
+        for (var i = 0; i < badHabits.Count; i++)
         {
-            var nowDate = DateTimeOffset.Now;
-            var lastOccurrence = badHabit.Occurrences.Max();
-            var lastOccurrenceDate = lastOccurrence?.OccurrenceDate ?? badHabit.StartDate;
-            int streak = (nowDate - lastOccurrenceDate).Days;
+            var badHabit = badHabits[i];
+            var nowDate = DateTimeOffset.Now.UtcDateTime.Date;
+            var startDateForStreakCalculation = GetStartDateForStreakCalculation(badHabit);
+            int streak = (nowDate - startDateForStreakCalculation).Days + 1;
             var badHabitResponse = new BadHabitResponse
             {
                 Description = badHabit.Description,
                 Streak = streak,
                 BadHabitId = badHabit.Id.Value,
             };
-            badHabitResponseList.Add(badHabitResponse);
+            badHabitResponseList[i] = badHabitResponse;
         }
-        
+
         return badHabitResponseList;
+    }
+
+    private static DateTimeOffset GetStartDateForStreakCalculation(BadHabit badHabit)
+    {
+        var startDateForStreakCalculation = badHabit.Occurrences.Count == 0 ?
+            badHabit.StartDate :
+            badHabit.Occurrences.Max(occurrence => occurrence.OccurrenceDate);
+        return startDateForStreakCalculation;
     }
 }
