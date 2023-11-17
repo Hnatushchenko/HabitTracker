@@ -4,4 +4,5 @@ public sealed record BadHabitResponse
 {
     public required Guid BadHabitId { get; init; }
     public required string Description { get; init; }
+    public required int Streak { get; init; }
 }
