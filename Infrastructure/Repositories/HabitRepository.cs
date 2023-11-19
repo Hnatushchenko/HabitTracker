@@ -24,7 +24,7 @@ public class HabitRepository : IHabitRepository
         return habits;
     }
 
-    public async Task<OneOf<Habit, NotFound>> GetByIdAsync(HabitId toDoItemId)
+    public async Task<OneOf<Habit, NotFound>> GetByIdDeprecatedAsync(HabitId toDoItemId)
     {
         var habit = await _applicationContext.Habits.FindAsync(toDoItemId);
         return habit is null ? new NotFound() : habit;

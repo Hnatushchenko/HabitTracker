@@ -21,7 +21,7 @@ public class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItem
     public async Task<UpdatedOrNotFound> Handle(UpdateToDoItemIsDoneCommand request,
         CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId);
+        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
         if (!queryResult.TryPickT0(out var toDoItem, out var notFound)) return notFound;
         toDoItem.IsDone = request.NewIsDoneValue;
         await _unitOfWork.SaveChangesAsync(cancellationToken);

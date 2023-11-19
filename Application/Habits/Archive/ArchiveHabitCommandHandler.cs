@@ -20,7 +20,7 @@ public class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCommand, S
     
     public async Task<SuccessOrNotFound> Handle(ArchiveHabitCommand request, CancellationToken cancellationToken)
     {
-        var getHabitResult = await _habitRepository.GetByIdAsync(request.HabitId);
+        var getHabitResult = await _habitRepository.GetByIdDeprecatedAsync(request.HabitId);
         if (!getHabitResult.TryPickT0(out var habit, out var notFound)) return notFound;
         habit.IsArchived = true;
         await _unitOfWork.SaveChangesAsync(cancellationToken);

@@ -18,7 +18,7 @@ public sealed class UpdateHabitDetailsCommandHandler : IRequestHandler<UpdateHab
     
     public async Task Handle(UpdateHabitDetailsCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _habitRepository.GetByIdAsync(request.HabitId);
+        var queryResult = await _habitRepository.GetByIdDeprecatedAsync(request.HabitId);
         if (!queryResult.TryPickT0(out var habit, out var notFound)) return;
         habit.ToDoItemDescription = request.ToDoItemDescription;
         habit.DefaultStartTime = request.DefaultStartTime;

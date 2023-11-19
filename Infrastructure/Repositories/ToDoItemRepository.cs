@@ -1,7 +1,9 @@
 ﻿using Application.Data;
 using Application.Extensions;
+using Domain.Exceptions;
 using Domain.Habit;
 using Domain.ToDoItem;
+using Domain.ToDoItem.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
@@ -23,10 +25,24 @@ public class ToDoItemRepository : IToDoItemRepository
         return toDoItems;
     }
 
-    public async Task<OneOf<ToDoItem, NotFound>> GetByIdAsync(ToDoItemId toDoItemId)
+    public async Task<OneOf<ToDoItem, NotFound>> GetByIdDeprecatedAsync(ToDoItemId toDoItemId)
     {
         var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId);
         return toDoItem is null ? new NotFound() : toDoItem;
+    }
+    
+    public async Task<ToDoItem> GetById(ToDoItemId toDoItemId)
+    {
+        var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId);
+        if (toDoItem == null)
+        {
+            throw new ToDoItemNotFoundException
+            {
+                ModelId = toDoItemId.Value
+            };
+        }
+
+        return toDoItem;
     }
 
     /// <inheritdoc/>

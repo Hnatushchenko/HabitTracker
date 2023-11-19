@@ -15,4 +15,5 @@ public interface IToDoItemRepository : IRepository<ToDoItem, ToDoItemId>
     void AddToDoItemForHabit(ToDoItem toDoItem, HabitId habitId);
     Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId);
     Task<bool> CheckToDoItemHabitAssociationAsync(ToDoItemId toDoItemId);
+    Task<ToDoItem> GetById(ToDoItemId toDoItemId);
 }

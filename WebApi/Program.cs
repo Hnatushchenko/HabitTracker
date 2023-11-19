@@ -2,7 +2,7 @@ using System.Text.Json.Serialization;
 using Application;
 using Carter;
 using Infrastructure;
-using Presentation;
+using WebApi.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +13,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-builder.Services.AddPresentation();
 builder.Services.AddDbContext<ApplicationContext>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
@@ -43,28 +42,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCustomExceptionsHandling();
+
 app.UseCors();
 
 app.MapCarter();
-
-// Console.ForegroundColor = ConsoleColor.Green;
-// var currentDir = Directory.GetCurrentDirectory();
-// // Get all the file names in the directory and subdirectories
-// string pattern = "*.*";
-// string[] files = Directory.GetFiles(currentDir, pattern, SearchOption.AllDirectories);
-//
-// for (int i = 0; i < 150; i++)
-// {
-//     var random = new Random();
-// // Loop through the array and print each file name to the console
-//     foreach (string file in files)
-//     {
-//         Console.Write(file);
-//         if (random.Next() % 10 == 0)
-//         {
-//             Console.WriteLine();
-//         }
-//     }
-// }
 
 app.Run();

@@ -3,11 +3,13 @@ using Application.ToDoItems.Delete;
 using Application.ToDoItems.DueTomorrow;
 using Application.ToDoItems.Get;
 using Application.ToDoItems.HideForTheRestOfTheDay;
+using Application.ToDoItems.Swap;
 using Application.ToDoItems.Update.Details;
 using Application.ToDoItems.Update.IsDone;
 using Carter;
 using Domain.ToDoItem;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints;
@@ -71,11 +73,24 @@ public sealed class ToDoItems : ICarterModule
             await sender.Send(command);
             return Results.NoContent();
         });
+
+        app.MapPost("to-do-items/swap", async (SwapToDoItemsRequest request, 
+            CancellationToken cancellationToken,
+            ISender sender) =>
+        {
+            var swapToDoItemsCommand = new SwapToDoItemsCommand
+            {
+                FirstToDoItemId = new ToDoItemId(request.FirstToDoItemId),
+                SecondToDoItemId = new ToDoItemId(request.SecondToDoItemId),
+            };
+            await sender.Send(swapToDoItemsCommand, cancellationToken);
+            return Results.NoContent();
+        });
         
         app.MapPost("to-do-items", async (CreateToDoItemCommand command, ISender sender) =>
         {
             await sender.Send(command);
-            return Results.Ok();
+            return Results.NoContent();
         });
 
         app.MapDelete("to-do-items/{toDoItemId}", async (ToDoItemId toDoItemId, ISender sender) =>

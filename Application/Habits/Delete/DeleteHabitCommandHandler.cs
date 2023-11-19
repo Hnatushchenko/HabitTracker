@@ -24,7 +24,7 @@ public sealed class DeleteHabitCommandHandler : IRequestHandler<DeleteHabitComma
     
     public async Task<DeletedOrNotFound> Handle(DeleteHabitCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _habitRepository.GetByIdAsync(request.HabitId);
+        var queryResult = await _habitRepository.GetByIdDeprecatedAsync(request.HabitId);
         if (!queryResult.TryPickT0(out var habit, out var notFound)) return notFound;
         await _toDoItemRepository.RemoveToDoItemsByTheirHabitAsync(habit.Id);
         _habitRepository.Remove(habit);
