@@ -19,8 +19,16 @@ public sealed class SwapToDoItemsCommandHandler : IRequestHandler<SwapToDoItemsC
     {
         var firstToDoItem = await _toDoItemRepository.GetByIdAsync(request.FirstToDoItemId, cancellationToken);
         var secondToDoItem = await _toDoItemRepository.GetByIdAsync(request.SecondToDoItemId, cancellationToken);
-        (firstToDoItem.StartTime, secondToDoItem.StartTime) = (secondToDoItem.StartTime, firstToDoItem.StartTime);
-        (firstToDoItem.EndTime, secondToDoItem.EndTime) = (secondToDoItem.EndTime, firstToDoItem.EndTime);
+        if (firstToDoItem.StartTime == secondToDoItem.StartTime)
+        {
+            firstToDoItem.StartTime = firstToDoItem.StartTime.AddMinutes(1);
+        }
+        else
+        {
+            (firstToDoItem.StartTime, secondToDoItem.StartTime) = (secondToDoItem.StartTime, firstToDoItem.StartTime);
+            (firstToDoItem.EndTime, secondToDoItem.EndTime) = (secondToDoItem.EndTime, firstToDoItem.EndTime);
+        }
+        
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -31,9 +31,9 @@ public class ToDoItemRepository : IToDoItemRepository
         return toDoItem is null ? new NotFound() : toDoItem;
     }
     
-    public async Task<ToDoItem> GetById(ToDoItemId toDoItemId)
+    public async Task<ToDoItem> GetByIdAsync(ToDoItemId toDoItemId, CancellationToken cancellationToken)
     {
-        var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId);
+        var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId, cancellationToken);
         if (toDoItem == null)
         {
             throw new ToDoItemNotFoundException
@@ -44,7 +44,7 @@ public class ToDoItemRepository : IToDoItemRepository
 
         return toDoItem;
     }
-
+    
     /// <inheritdoc/>
     public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate)
     {
