@@ -9,5 +9,6 @@ public sealed record CreateHabitCommand(
     TimeOnly DefaultStartTime,
     TimeOnly DefaultEndTime,
     TimeUnit TimeUnit,
+    DayOfWeekFrequency DayOfWeekFrequency,
     int FrequencyCount,
     string ToDoItemDescription) : IRequest;

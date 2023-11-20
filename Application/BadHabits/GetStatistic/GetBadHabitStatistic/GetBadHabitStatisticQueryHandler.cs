@@ -24,6 +24,7 @@ public sealed class GetBadHabitStatisticQueryHandler : IRequestHandler<GetBadHab
             .Where(badHabitOccurrence => badHabitOccurrence.BadHabitId == request.BadHabitId)
             .Select(badHabitOccurrence => badHabitOccurrence.OccurrenceDate)
             .ToListAsync(cancellationToken);
+        
         var getBadHabitStatisticResponse = new GetBadHabitStatisticResponse()
         {
             StartDate = badHabit.StartDate,

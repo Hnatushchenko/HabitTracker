@@ -10,6 +10,7 @@ public sealed class Habit
     public required TimeOnly DefaultStartTime { get; set; }
     public required TimeOnly DefaultEndTime { get; set; }
     public required TimeUnit FrequencyTimeUnit { get; set; }
+    public DayOfWeekFrequency DayOfWeekFrequency { get; set; }
     public required FrequencyCount FrequencyCount { get; set; } 
     public required DateTimeOffset StartDate { get; set; }
     public bool IsArchived { get; set; }

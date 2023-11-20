@@ -5,9 +5,24 @@ namespace Application.Habits.Calculations;
 
 public sealed class HabitOccurrencesCalculator : IHabitOccurrencesCalculator
 {
+    private static readonly Dictionary<DayOfWeek, DayOfWeekFrequency> DayOfWeekToDayOfWeekFrequencyMap = new()
+    {
+        { DayOfWeek.Sunday, DayOfWeekFrequency.OnSundays },
+        { DayOfWeek.Monday, DayOfWeekFrequency.OnMondays },
+        { DayOfWeek.Tuesday, DayOfWeekFrequency.OnTuesdays },
+        { DayOfWeek.Wednesday, DayOfWeekFrequency.OnWednesdays },
+        { DayOfWeek.Thursday, DayOfWeekFrequency.OnThursdays },
+        { DayOfWeek.Friday, DayOfWeekFrequency.OnFridays },
+        { DayOfWeek.Saturday, DayOfWeekFrequency.OnSaturdays },
+    };
     /// <inheritdoc/>
     public bool ShouldHabitOccurOnSpecifiedDate(Habit habit, DateTimeOffset targetDate)
     {
+        if (habit.DayOfWeekFrequency.HasFlag(DayOfWeekToDayOfWeekFrequencyMap[targetDate.DayOfWeek]))
+        {
+            return true;
+        }
+        
         var startDate = habit.StartDate;
         if (startDate.HasUtcDateEqualTo(targetDate))
         {
