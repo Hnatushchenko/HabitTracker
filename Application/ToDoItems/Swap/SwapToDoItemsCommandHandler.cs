@@ -1,6 +1,5 @@
 ﻿using Domain;
 using Domain.ToDoItem;
-using Helpers.Extensions;
 using MediatR;
 
 namespace Application.ToDoItems.Swap;
@@ -18,15 +17,10 @@ public sealed class SwapToDoItemsCommandHandler : IRequestHandler<SwapToDoItemsC
     
     public async Task Handle(SwapToDoItemsCommand request, CancellationToken cancellationToken)
     {
-        var firstToDoItemTask = _toDoItemRepository.GetById(request.FirstToDoItemId);
-        var secondToDoItemTask = _toDoItemRepository.GetById(request.SecondToDoItemId);
-        await TaskExt.WhenAll(firstToDoItemTask, secondToDoItemTask);
-        var firstToDoItem = firstToDoItemTask.Result;
-        var secondToDoItem = secondToDoItemTask.Result;
-        
+        var firstToDoItem = await _toDoItemRepository.GetByIdAsync(request.FirstToDoItemId, cancellationToken);
+        var secondToDoItem = await _toDoItemRepository.GetByIdAsync(request.SecondToDoItemId, cancellationToken);
         (firstToDoItem.StartTime, secondToDoItem.StartTime) = (secondToDoItem.StartTime, firstToDoItem.StartTime);
         (firstToDoItem.EndTime, secondToDoItem.EndTime) = (secondToDoItem.EndTime, firstToDoItem.EndTime);
-
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
