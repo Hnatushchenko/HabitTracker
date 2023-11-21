@@ -1,7 +1,10 @@
-﻿using Application.Habits.Calculations;
+﻿using Application.Common.PipelineBehaviours;
+using Application.Habits.Calculations;
 using Application.Interfaces.Creators;
 using Application.Services.Creators;
 using FluentValidation;
+using MediatR;
+using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -18,5 +21,6 @@ public static class DependencyInjection
             configuration.RegisterServicesFromAssembly(assembly);
         });
         services.AddValidatorsFromAssembly(assembly);
+        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
     } 
 }

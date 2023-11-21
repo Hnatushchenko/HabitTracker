@@ -32,5 +32,6 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
         };
         _habitRepository.Add(habit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        
     }
 }

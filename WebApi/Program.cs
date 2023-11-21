@@ -3,6 +3,7 @@ using Application;
 using Carter;
 using Infrastructure;
 using WebApi.Extensions;
+using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,7 +14,6 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure();
-builder.Services.AddDbContext<ApplicationContext>();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -43,9 +43,12 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseCustomExceptionsHandling();
+app.UseMiddleware<ValidationExceptionHandlingMiddleware>();
 
 app.UseCors();
 
 app.MapCarter();
+
+app.UseSwaggerUI(); 
 
 app.Run();
