@@ -1,5 +1,4 @@
-﻿using Domain.ToDoItem;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.ToDoItems.Swap;
 

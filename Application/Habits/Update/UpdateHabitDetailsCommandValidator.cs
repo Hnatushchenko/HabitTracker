@@ -6,8 +6,7 @@ public sealed class UpdateHabitDetailsCommandValidator : AbstractValidator<Updat
 {
     public UpdateHabitDetailsCommandValidator()
     {
-        RuleFor(updateHabitDetailsCommand => updateHabitDetailsCommand.HabitId)
-            .NotEmpty();
+        RuleFor(updateHabitDetailsCommand => updateHabitDetailsCommand.HabitId.Value).NotEmpty();
         RuleFor(updateHabit => updateHabit.DefaultStartTime)
             .LessThanOrEqualTo(updateHabit => updateHabit.DefaultEndTime);
     }

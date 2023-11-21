@@ -1,6 +1,4 @@
-﻿using Domain.ToDoItem;
-
-namespace Application.ToDoItems.Get;
+﻿namespace Application.ToDoItems.Get;
 
 public sealed record ToDoItemResponse(Guid Id,
     TimeOnly StartTime,
