@@ -2,7 +2,7 @@
 
 namespace Domain.Habit;
 
-public sealed class Habit
+public sealed class Habit : IHabitWithToDoItems
 {
     public required HabitId Id { get; set; }
     public required string Description { get; set; }

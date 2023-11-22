@@ -23,8 +23,7 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
         var toDoItemResponseList = new List<ToDoItemResponse>(toDoItems.Count);
         foreach (var toDoItem in toDoItems)
         {
-            
-            var isToDoItemAssociatedWithHabit = await _toDoItemRepository.CheckToDoItemHabitAssociationAsync(toDoItem.Id);
+            var isToDoItemAssociatedWithHabit = toDoItem.HabitId is not null;
             var toDoItemResponse = new ToDoItemResponse(toDoItem.Id.Value,
                 toDoItem.StartTime,
                 toDoItem.EndTime,
@@ -34,6 +33,7 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
             );
             toDoItemResponseList.Add(toDoItemResponse);
         }
+        
         return toDoItemResponseList;
     }
 }

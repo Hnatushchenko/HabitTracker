@@ -18,17 +18,16 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
     
     public async Task<GetHabitStatisticResponse> Handle(GetHabitStatisticQuery request, CancellationToken cancellationToken)
     {
-        var utcNow = DateTimeOffset.Now;
-        var allDateBasedHabitStatuses = _applicationContext.HabitToDoItems
-            .Include(habitToDoItem => habitToDoItem.ToDoItem)
-            .Where(habitToDoItem => habitToDoItem.HabitId == request.HabitId)
-            .Select(habitToDoItem => new DateBasedHabitStatus
+        var allDateBasedHabitStatuses = _applicationContext.ToDoItems
+            .Where(toDoItem => toDoItem.HabitId == request.HabitId)
+            .Select(toDoItem => new DateBasedHabitStatus
             {
-                Date = habitToDoItem.ToDoItem!.DueDate,
-                IsCompleted = habitToDoItem.ToDoItem.IsDone
+                Date = toDoItem.DueDate,
+                IsCompleted = toDoItem.IsDone
             })
             .AsAsyncEnumerable()
             .WithCancellation(cancellationToken);
+        var utcNow = DateTimeOffset.Now;
         var filteredDateBasedHabitStatuses = new List<DateBasedHabitStatus>();
         await foreach (var dateBasedHabitStatus in allDateBasedHabitStatuses)
         {

@@ -10,10 +10,6 @@ public interface IToDoItemRepository : IRepository<ToDoItem, ToDoItemId>
     /// <param name="dueDate">The date by which the ToDoItems are expected to be completed or delivered.</param>
     /// <returns>A list of ToDoItem objects that have the same due date, or an empty list if none are found.</returns>
     Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate);
-
-    Task<List<HabitToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate);
-    void AddToDoItemForHabit(ToDoItem toDoItem, HabitId habitId);
-    Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId);
-    Task<bool> CheckToDoItemHabitAssociationAsync(ToDoItemId toDoItemId);
-    Task<ToDoItem> GetByIdAsync(ToDoItemId toDoItemId, CancellationToken cancellationToken);
+    Task<List<ToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate, CancellationToken cancellationToken);
+    Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId, CancellationToken cancellationToken);
 }

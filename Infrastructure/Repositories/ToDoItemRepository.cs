@@ -1,6 +1,5 @@
 ﻿using Application.Data;
 using Application.Extensions;
-using Domain.Exceptions;
 using Domain.Habit;
 using Domain.ToDoItem;
 using Domain.ToDoItem.Exceptions;
@@ -34,7 +33,7 @@ public class ToDoItemRepository : IToDoItemRepository
     public async Task<ToDoItem> GetByIdAsync(ToDoItemId toDoItemId, CancellationToken cancellationToken)
     {
         var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId, cancellationToken);
-        if (toDoItem == null)
+        if (toDoItem is null)
         {
             throw new ToDoItemNotFoundException
             {
@@ -57,15 +56,17 @@ public class ToDoItemRepository : IToDoItemRepository
             .ToList();
         return toDoItems;
     }
-
-    public async Task<List<HabitToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate)
+    
+    public async Task<List<ToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate, CancellationToken cancellationToken)
     {
-        var toDoItems = (await _applicationContext.HabitToDoItems
-            .Include(habitToDoItem => habitToDoItem.Habit)
-            .Include(habitToDoItem => habitToDoItem.ToDoItem)
-            .ToListAsync())
-            .Where(habitToDoItem => habitToDoItem.ToDoItem!.DueDate.HasUtcDateEqualTo(dueDate)).ToList();
-        return toDoItems;
+        var allToDoItems = await _applicationContext.ToDoItems
+            .Include(toDoItem => toDoItem.Habit)
+            .Where(toDoItem => toDoItem.HabitId != null)
+            .ToListAsync(cancellationToken);
+        var filteredToDoItems = allToDoItems
+            .Where(toDoItem => toDoItem.DueDate.HasUtcDateEqualTo(dueDate))
+            .ToList();
+        return filteredToDoItems;
     }
 
     public void Add(ToDoItem toDoItem)
@@ -73,34 +74,11 @@ public class ToDoItemRepository : IToDoItemRepository
         _applicationContext.ToDoItems.Add(toDoItem);
     }
     
-    public void AddToDoItemForHabit(ToDoItem toDoItem, HabitId habitId)
+    public async Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId, CancellationToken cancellationToken)
     {
-        Add(toDoItem);
-        var habitToDoItem = new HabitToDoItem()
-        {
-            HabitId = habitId,
-            ToDoItemId = toDoItem.Id
-        };
-        _applicationContext.HabitToDoItems.Add(habitToDoItem);
-    }
-
-    public async Task<bool> CheckToDoItemHabitAssociationAsync(ToDoItemId toDoItemId)
-    {
-        var queryResult = await _applicationContext.HabitToDoItems.FirstOrDefaultAsync(habitToDoItem =>
-            habitToDoItem.ToDoItemId == toDoItemId);
-        var result = queryResult is not null;
-        return result;
-    }
-
-    public async Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId)
-    {
-        var habitToDoItemsToRemove = await _applicationContext.HabitToDoItems
-            .Include(habitToDoItem => habitToDoItem.ToDoItem)
-            .Where(habitToDoItem => habitToDoItem.HabitId == habitId)
-            .ToListAsync();
-        _applicationContext.HabitToDoItems.RemoveRange(habitToDoItemsToRemove);
-        var toDoItemsToRemove = habitToDoItemsToRemove.Select(habitToDoItem => habitToDoItem.ToDoItem!);
-        _applicationContext.ToDoItems.RemoveRange(toDoItemsToRemove);
+        await _applicationContext.ToDoItems
+            .Where(toDoItem => toDoItem.HabitId == habitId)
+            .ExecuteDeleteAsync(cancellationToken);
     }
 
     public void Remove(ToDoItem toDoItem)

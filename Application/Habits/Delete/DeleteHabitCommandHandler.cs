@@ -7,7 +7,7 @@ using MediatR;
 
 namespace Application.Habits.Delete;
 
-public sealed class DeleteHabitCommandHandler : IRequestHandler<DeleteHabitCommand, DeletedOrNotFound>
+public sealed class DeleteHabitCommandHandler : IRequestHandler<DeleteHabitCommand>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;
@@ -22,13 +22,11 @@ public sealed class DeleteHabitCommandHandler : IRequestHandler<DeleteHabitComma
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<DeletedOrNotFound> Handle(DeleteHabitCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteHabitCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _habitRepository.GetByIdDeprecatedAsync(request.HabitId);
-        if (!queryResult.TryPickT0(out var habit, out var notFound)) return notFound;
-        await _toDoItemRepository.RemoveToDoItemsByTheirHabitAsync(habit.Id);
+        var habit = await _habitRepository.GetByIdAsync(request.HabitId, cancellationToken);
+        await _toDoItemRepository.RemoveToDoItemsByTheirHabitAsync(habit.Id, cancellationToken);
         _habitRepository.Remove(habit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return new Deleted();
     }
 }

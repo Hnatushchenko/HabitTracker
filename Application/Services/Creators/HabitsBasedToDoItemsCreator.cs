@@ -23,10 +23,10 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
     public async Task EnsureHabitsBasedToDoItemsCreatedAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
         var activeHabits = await _habitRepository.GetActiveHabitsByTargetDateAsync(targetDate);
-        var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate);
+        var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate, cancellationToken);
         foreach (var habit in activeHabits)
         {
-            if (toDoItems.All(toDoItem => toDoItem.Habit!.Id != habit.Id))
+            if (toDoItems.All(toDoItem => toDoItem.HabitId != habit.Id))
             {
                 var toDoItem = new ToDoItem
                 {
@@ -35,8 +35,9 @@ public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
                     DueDate = targetDate,
                     StartTime = habit.DefaultStartTime,
                     EndTime = habit.DefaultEndTime,
+                    HabitId = habit.Id
                 };
-                _toDoItemRepository.AddToDoItemForHabit(toDoItem, habit.Id);
+                _toDoItemRepository.Add(toDoItem);
             }
         }
         

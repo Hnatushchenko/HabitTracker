@@ -7,6 +7,7 @@ using Application.Habits.Update;
 using Carter;
 using Domain.Habit;
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApi.Endpoints;
 
@@ -49,13 +50,13 @@ public class Habits : ICarterModule
             return Results.Ok();
         });
 
-        app.MapDelete("habits/{id:guid}", async (Guid id, ISender sender) =>
+        app.MapDelete("habits/{habitId:guid}", async (Guid habitId,
+            ISender sender,
+            CancellationToken cancellationToken) =>
         {
-            var deleteHabitCommand = new DeleteHabitCommand(new HabitId(id));
-            var deleteOperationResult = await sender.Send(deleteHabitCommand);
-            var result = deleteOperationResult.Match(deleted => Results.NoContent(),
-                notFound => Results.NotFound());
-            return result;
+            var deleteHabitCommand = new DeleteHabitCommand(new HabitId(habitId));
+            await sender.Send(deleteHabitCommand, cancellationToken);
+            return Results.NoContent();
         });
 
         app.MapGet("habits/{id:guid}/statistic", async (Guid id, ISender sender) =>

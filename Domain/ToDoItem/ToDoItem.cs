@@ -1,4 +1,6 @@
-﻿namespace Domain.ToDoItem;
+﻿using Domain.Habit;
+
+namespace Domain.ToDoItem;
 
 public sealed class ToDoItem
 {
@@ -9,4 +11,6 @@ public sealed class ToDoItem
     public required DateTimeOffset DueDate { get; set; }
     public bool IsHiddenOnDueDate { get; set; }
     public bool IsDone { get; set; }
+    public HabitId? HabitId { get; set; }
+    public Habit.Habit? Habit { get; set; }
 }

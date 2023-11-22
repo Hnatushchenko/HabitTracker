@@ -1,6 +1,7 @@
 ﻿using Application.Data;
 using Application.Habits.Calculations;
 using Domain.Habit;
+using Domain.Habit.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
@@ -18,16 +19,62 @@ public class HabitRepository : IHabitRepository
         _habitOccurrencesCalculator = habitOccurrencesCalculator;
         _applicationContext = applicationContext;
     }
-    public async Task<List<Habit>> GetAllAsync()
+    public async Task<List<IHabit>> GetAllAsync()
     {
-        var habits = await _applicationContext.Habits.ToListAsync();
+        var habits = await _applicationContext.Habits.Cast<IHabit>().ToListAsync();
         return habits;
     }
 
-    public async Task<OneOf<Habit, NotFound>> GetByIdDeprecatedAsync(HabitId toDoItemId)
+    public async Task<OneOf<IHabit, NotFound>> GetByIdDeprecatedAsync(HabitId toDoItemId)
     {
         var habit = await _applicationContext.Habits.FindAsync(toDoItemId);
         return habit is null ? new NotFound() : habit;
+    }
+
+    public async Task<IHabitWithToDoItems> GetHabitByIdWithToDoItemsIncluded(HabitId habitId, CancellationToken cancellationToken)
+    {
+        var habit = await _applicationContext.Habits
+            .Include(habit => habit.ToDoItems)
+            .FirstOrDefaultAsync(habit => habit.Id == habitId, cancellationToken);
+        if (habit is null)
+        {
+            throw new HabitNotFoundException
+            {
+                ModelId = habitId.Value
+            };
+        }
+
+        return habit;
+    }
+
+    public async Task<IHabit> GetByIdAsync(HabitId habitId, CancellationToken cancellationToken)
+    {
+        var habit = await _applicationContext.Habits.FindAsync(habitId, cancellationToken);
+        if (habit is null)
+        {
+            throw new HabitNotFoundException
+            {
+                ModelId = habitId.Value
+            };
+        }
+
+        return habit;
+    }
+
+    public void Add(IHabit iHabit)
+    {
+        if (iHabit is Habit habit)
+        {
+            Add(habit);
+        }
+    }
+
+    public void Remove(IHabit entity)
+    {
+        if (entity is Habit habit)
+        {
+            Remove(habit);
+        }
     }
 
     /// <summary>
@@ -35,23 +82,24 @@ public class HabitRepository : IHabitRepository
     /// </summary>
     /// <param name="targetDate">The date to check for habits.</param>
     /// <returns>A list of habits that match the target date.</returns>
-    public async Task<List<Habit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate)
+    public async Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate)
     {
         var activeHabits = await _applicationContext.Habits
             .Where(habit => !habit.IsArchived)
             .ToListAsync();
         var filteredHabits = activeHabits
             .Where(habit => _habitOccurrencesCalculator.ShouldHabitOccurOnSpecifiedDate(habit, targetDate))
+            .Cast<IHabit>()
             .ToList();
         return filteredHabits;
     }
 
-    public void Add(Habit habit)
+    private void Add(Habit habit)
     {
         _applicationContext.Habits.Add(habit);
     }
 
-    public void Remove(Habit habit)
+    private void Remove(Habit habit)
     {
         _applicationContext.Habits.Remove(habit);
     }

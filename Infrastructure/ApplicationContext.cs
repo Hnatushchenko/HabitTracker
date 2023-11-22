@@ -10,14 +10,8 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
 {
     public DbSet<ToDoItem> ToDoItems => Set<ToDoItem>();
     public DbSet<Habit> Habits => Set<Habit>();
-    public DbSet<HabitToDoItem> HabitToDoItems => Set<HabitToDoItem>();
     public DbSet<BadHabit> BadHabits => Set<BadHabit>();
     public DbSet<BadHabitOccurrence> BadHabitOccurrences => Set<BadHabitOccurrence>();
-    
-    public ApplicationContext()
-    {
-        //Database.EnsureCreated();
-    }
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
