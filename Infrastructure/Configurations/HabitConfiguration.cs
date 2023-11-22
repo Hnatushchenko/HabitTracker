@@ -1,4 +1,5 @@
 ﻿using Domain.Habit;
+using Infrastructure.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,7 +19,9 @@ public sealed class HabitConfiguration : IEntityTypeConfiguration<Habit>
         builder.Property(h => h.FrequencyCount)
             .HasConversion(frequencyCount => frequencyCount.Value, value => FrequencyCount.From(value));
         builder.HasMany(h => h.ToDoItems);
-        builder.Property(t => t.DefaultEndTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
-        builder.Property(t => t.DefaultStartTime).HasConversion<MyTimeOnlyConverter>().HasColumnType("time");
+        builder.Property(t => t.DefaultEndTime).HasConversion<TimeOnlyValueConverter>().HasColumnType("time");
+        builder.Property(t => t.DefaultStartTime).HasConversion<TimeOnlyValueConverter>().HasColumnType("time");
+        builder.ToTable(t => t.HasCheckConstraint(nameof(Habit.DefaultStartTime),
+            $"{nameof(Habit.DefaultStartTime)} <= {nameof(Habit.DefaultEndTime)}"));
     }
 }
