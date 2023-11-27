@@ -6,7 +6,7 @@ using OneOf.Types;
 
 namespace Application.BadHabits.AddOccurrence;
 
-public class AddBadHabitOccurrenceCommandHandler : IRequestHandler<AddBadHabitOccurrenceCommand, SuccessOrDuplicateBadHabitOccurrenceError>
+public sealed class AddBadHabitOccurrenceCommandHandler : IRequestHandler<AddBadHabitOccurrenceCommand, SuccessOrDuplicateBadHabitOccurrenceError>
 {
     private readonly IBadHabitRepository _badHabitRepository;
     private readonly IUnitOfWork _unitOfWork;

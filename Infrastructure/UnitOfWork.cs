@@ -3,7 +3,7 @@ using Domain;
 
 namespace Infrastructure;
 
-public class UnitOfWork : IUnitOfWork
+public sealed class UnitOfWork : IUnitOfWork
 {
     private readonly IApplicationContext _applicationContext;
 

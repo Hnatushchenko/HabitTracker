@@ -7,11 +7,10 @@ using Application.Habits.Update;
 using Carter;
 using Domain.Habit;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApi.Endpoints;
 
-public class Habits : ICarterModule
+public sealed class Habits : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {

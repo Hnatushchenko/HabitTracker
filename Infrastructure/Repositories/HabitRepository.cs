@@ -8,7 +8,7 @@ using OneOf.Types;
 
 namespace Infrastructure.Repositories;
 
-public class HabitRepository : IHabitRepository
+public sealed class HabitRepository : IHabitRepository
 {
     private readonly IHabitOccurrencesCalculator _habitOccurrencesCalculator;
     private readonly IApplicationContext _applicationContext;
@@ -77,11 +77,7 @@ public class HabitRepository : IHabitRepository
         }
     }
 
-    /// <summary>
-    /// Gets a list of habits that should occur on a given target date.
-    /// </summary>
-    /// <param name="targetDate">The date to check for habits.</param>
-    /// <returns>A list of habits that match the target date.</returns>
+    /// <inheritdoc />
     public async Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate)
     {
         var activeHabits = await _applicationContext.Habits

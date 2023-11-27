@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Update.IsDone;
 
-public class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItemIsDoneCommand, UpdatedOrNotFound>
+public sealed class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItemIsDoneCommand, UpdatedOrNotFound>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;

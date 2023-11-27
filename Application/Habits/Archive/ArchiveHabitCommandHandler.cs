@@ -6,7 +6,7 @@ using OneOf.Types;
 
 namespace Application.Habits.Archive;
 
-public class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCommand, SuccessOrNotFound>
+public sealed class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCommand, SuccessOrNotFound>
 {
     private readonly IHabitRepository _habitRepository;
     private readonly IUnitOfWork _unitOfWork;

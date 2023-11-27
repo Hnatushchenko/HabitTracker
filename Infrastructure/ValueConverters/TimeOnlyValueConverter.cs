@@ -2,7 +2,7 @@
 
 namespace Infrastructure.ValueConverters;
 
-public class TimeOnlyValueConverter : ValueConverter<TimeOnly, TimeSpan>
+public sealed class TimeOnlyValueConverter : ValueConverter<TimeOnly, TimeSpan>
 {
     public TimeOnlyValueConverter() : base(
         timeOnly => timeOnly.ToTimeSpan(),

@@ -1,14 +1,18 @@
-﻿using ValueOf;
+﻿using FluentValidation;
+using FluentValidation.Results;
 
 namespace Domain.Habit;
 
-public class FrequencyCount : ValueOf<int, FrequencyCount>
+public sealed class FrequencyCount : ValueOf<int, FrequencyCount>
 {
     protected override void Validate()
     {
         if (Value < 1)
         {
-            throw new ArgumentException($"Frequency count cannot be less then one. Current value: {Value}");
+            var failure = new ValidationFailure(nameof(FrequencyCount),
+                $"'{nameof(FrequencyCount)}' must be greater than 0.",
+                Value);
+            throw new ValidationException(new [] {failure});
         }
     }
 }

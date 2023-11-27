@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
 
-public class BadHabitOccurrenceConfiguration : IEntityTypeConfiguration<BadHabitOccurrence>
+public sealed class BadHabitOccurrenceConfiguration : IEntityTypeConfiguration<BadHabitOccurrence>
 {
     public void Configure(EntityTypeBuilder<BadHabitOccurrence> builder)
     {

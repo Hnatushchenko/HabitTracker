@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.BadHabits.DeleteOccurrence;
 
-public class DeleteBadHabitOccurrenceCommandHandler : IRequestHandler<DeleteBadHabitOccurrenceCommand>
+public sealed class DeleteBadHabitOccurrenceCommandHandler : IRequestHandler<DeleteBadHabitOccurrenceCommand>
 {
     private readonly IBadHabitRepository _badHabitRepository;
     

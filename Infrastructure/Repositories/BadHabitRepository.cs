@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class BadHabitRepository : IBadHabitRepository
+public sealed class BadHabitRepository : IBadHabitRepository
 {
     private readonly IApplicationContext _applicationContext;
 

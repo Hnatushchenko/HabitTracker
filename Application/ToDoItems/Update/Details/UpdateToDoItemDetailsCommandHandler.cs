@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Update.Details;
 
-public class UpdateToDoItemDetailsCommandHandler : IRequestHandler<UpdateToDoItemDetailsCommand, UpdatedOrNotFound>
+public sealed class UpdateToDoItemDetailsCommandHandler : IRequestHandler<UpdateToDoItemDetailsCommand, UpdatedOrNotFound>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
