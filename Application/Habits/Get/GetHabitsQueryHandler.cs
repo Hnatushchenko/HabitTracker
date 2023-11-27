@@ -20,7 +20,7 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
     }
     public async Task<IEnumerable<HabitResponse>> Handle(GetHabitsQuery request, CancellationToken cancellationToken)
     {
-        var habits = await _habitRepository.GetAllAsync();
+        var habits = await _habitRepository.GetAllAsync(cancellationToken);
         var habitResponseList = new List<HabitResponse>(habits.Count);
         foreach (var habit in habits)
         {

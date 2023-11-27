@@ -19,9 +19,10 @@ public sealed class HabitRepository : IHabitRepository
         _habitOccurrencesCalculator = habitOccurrencesCalculator;
         _applicationContext = applicationContext;
     }
-    public async Task<List<IHabit>> GetAllAsync()
+    public async Task<List<IHabit>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var habits = await _applicationContext.Habits.Cast<IHabit>().ToListAsync();
+        var habits = await _applicationContext.Habits.Cast<IHabit>()
+            .ToListAsync(cancellationToken: cancellationToken);
         return habits;
     }
 

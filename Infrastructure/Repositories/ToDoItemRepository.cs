@@ -21,9 +21,10 @@ public sealed class ToDoItemRepository : IToDoItemRepository
         _timeProvider = timeProvider;
     }
     
-    public async Task<List<ToDoItem>> GetAllAsync()
+    public async Task<List<ToDoItem>> GetAllAsync(CancellationToken cancellationToken)
     {
-        var toDoItems = await _applicationContext.ToDoItems.ToListAsync();
+        var toDoItems = await _applicationContext.ToDoItems
+            .ToListAsync(cancellationToken: cancellationToken);
         return toDoItems;
     }
 
