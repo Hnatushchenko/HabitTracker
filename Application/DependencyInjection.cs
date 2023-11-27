@@ -1,7 +1,7 @@
-﻿using Application.Common.PipelineBehaviours;
+﻿using Application.Common.Interfaces.Creators;
+using Application.Common.PipelineBehaviours;
+using Application.Common.Services.Creators;
 using Application.Habits.Calculations;
-using Application.Interfaces.Creators;
-using Application.Services.Creators;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -15,7 +15,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<IHabitOccurrencesCalculator, HabitOccurrencesCalculator>();
         services.AddScoped<IHabitsBasedToDoItemsCreator, HabitsBasedToDoItemsCreator>();
-        var assembly = typeof(DependencyInjection).Assembly;
+        var assembly = typeof(ApplicationAssemblyMarker).Assembly;
         services.AddMediatR(configuration =>
         {
             configuration.RegisterServicesFromAssembly(assembly);
