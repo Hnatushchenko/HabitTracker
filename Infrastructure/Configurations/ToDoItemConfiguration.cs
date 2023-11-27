@@ -10,6 +10,10 @@ public sealed class ToDoItemConfiguration : IEntityTypeConfiguration<ToDoItem>
     public void Configure(EntityTypeBuilder<ToDoItem> builder)
     {
         builder.HasKey(t => t.Id);
+        builder.HasMany(e => e.Children)
+            .WithOne(e => e.Parent)
+            .HasForeignKey(e => e.ParentId)
+            .IsRequired(false);
         builder.Property(t => t.Id)
             .HasConversion(toDoItemId => toDoItemId.Value, value => new ToDoItemId(value));
         builder.Property(t => t.EndTime).HasConversion<TimeOnlyValueConverter>().HasColumnType("time");

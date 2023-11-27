@@ -4,6 +4,7 @@ namespace Domain.Habit;
 
 public sealed class Habit : IHabitWithToDoItems
 {
+    private List<ToDoItem.ToDoItem>? _toDoItems;
     public required HabitId Id { get; set; }
     public required string Description { get; set; }
     public required string ToDoItemDescription { get; set; }
@@ -14,5 +15,5 @@ public sealed class Habit : IHabitWithToDoItems
     public required FrequencyCount FrequencyCount { get; set; } 
     public required DateTimeOffset StartDate { get; set; }
     public bool IsArchived { get; set; }
-    public List<ToDoItem.ToDoItem> ToDoItems { get; } = new();
+    public IEnumerable<ToDoItem.ToDoItem> ToDoItems => _toDoItems ??= new List<ToDoItem.ToDoItem>();
 }

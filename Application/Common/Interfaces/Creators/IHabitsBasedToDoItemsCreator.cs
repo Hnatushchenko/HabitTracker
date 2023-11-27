@@ -1,4 +1,4 @@
-﻿namespace Application.Interfaces.Creators;
+﻿namespace Application.Common.Interfaces.Creators;
 
 public interface IHabitsBasedToDoItemsCreator
 {

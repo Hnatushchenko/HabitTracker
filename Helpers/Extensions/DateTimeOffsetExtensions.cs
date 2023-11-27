@@ -1,4 +1,4 @@
-﻿namespace Application.Extensions;
+﻿namespace Helpers.Extensions;
 
 public static class DateTimeOffsetExtensions
 {

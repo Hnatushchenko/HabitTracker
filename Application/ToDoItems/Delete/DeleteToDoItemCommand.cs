@@ -4,4 +4,4 @@ using MediatR;
 
 namespace Application.ToDoItems.Delete;
 
-public sealed record DeleteToDoItemCommand(ToDoItemId ToDoItemId) : IRequest<DeletedOrNotFound>;
+public sealed record DeleteToDoItemCommand(ToDoItemId ToDoItemId) : IRequest;

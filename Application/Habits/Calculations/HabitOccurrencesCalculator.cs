@@ -1,5 +1,5 @@
-﻿using Application.Extensions;
-using Domain.Habit;
+﻿using Domain.Habit;
+using Helpers.Extensions;
 
 namespace Application.Habits.Calculations;
 

@@ -18,9 +18,10 @@ public sealed class CreateToDoItemCommandHandler : IRequestHandler<CreateToDoIte
     
     public async Task Handle(CreateToDoItemCommand request, CancellationToken cancellationToken)
     {
-        var toDoItem = new ToDoItem()
+        var toDoItem = new ToDoItem
         {
             Id = new ToDoItemId(Guid.NewGuid()),
+            ParentId = request.ParentToDoItemId,
             Description = request.Description,
             StartTime = request.StartTime,
             EndTime = request.EndTime,

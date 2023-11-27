@@ -1,15 +1,15 @@
 ﻿using Application.Data;
-using Application.Extensions;
 using Domain.Habit;
 using Domain.ToDoItem;
 using Domain.ToDoItem.Exceptions;
+using Helpers.Extensions;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
 
 namespace Infrastructure.Repositories;
 
-public class ToDoItemRepository : IToDoItemRepository
+public sealed class ToDoItemRepository : IToDoItemRepository
 {
     private readonly IApplicationContext _applicationContext;
 
@@ -67,6 +67,14 @@ public class ToDoItemRepository : IToDoItemRepository
             .Where(toDoItem => toDoItem.DueDate.HasUtcDateEqualTo(dueDate))
             .ToList();
         return filteredToDoItems;
+    }
+    
+    public async Task<List<ToDoItem>> GetChildrenByParentToDoItemIdAsync(ToDoItemId parentToDoItemId, CancellationToken cancellationToken)
+    {
+        var children = await _applicationContext.ToDoItems
+            .Where(toDoItem => toDoItem.ParentId == parentToDoItemId)
+            .ToListAsync(cancellationToken);
+        return children;
     }
 
     public void Add(ToDoItem toDoItem)

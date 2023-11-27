@@ -1,11 +1,11 @@
-﻿using Application.Interfaces.Creators;
+﻿using Application.Common.Interfaces.Creators;
 using Domain;
 using Domain.Habit;
 using Domain.ToDoItem;
 
-namespace Application.Services.Creators;
+namespace Application.Common.Services.Creators;
 
-public class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
+public sealed class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;

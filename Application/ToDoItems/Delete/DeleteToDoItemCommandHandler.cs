@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Delete;
 
-public sealed class DeleteToDoItemCommandHandler : IRequestHandler<DeleteToDoItemCommand, DeletedOrNotFound>
+public sealed class DeleteToDoItemCommandHandler : IRequestHandler<DeleteToDoItemCommand>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -17,12 +17,21 @@ public sealed class DeleteToDoItemCommandHandler : IRequestHandler<DeleteToDoIte
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<DeletedOrNotFound> Handle(DeleteToDoItemCommand request, CancellationToken cancellationToken)
+    public async Task Handle(DeleteToDoItemCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
-        if (!queryResult.TryPickT0(out var habit, out var notFound)) return notFound;
-        _toDoItemRepository.Remove(habit);
+        var toDoItem = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId, cancellationToken);
+        await RecursiveDeleteAsync(toDoItem, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return new Deleted();
+    }
+    
+    private async Task RecursiveDeleteAsync(ToDoItem parent, CancellationToken cancellationToken)
+    {
+        var children = await _toDoItemRepository.GetChildrenByParentToDoItemIdAsync(parent.Id, cancellationToken);
+        foreach (var child in children)
+        {
+            await RecursiveDeleteAsync(child, cancellationToken);
+        }
+        
+        _toDoItemRepository.Remove(parent);
     }
 }

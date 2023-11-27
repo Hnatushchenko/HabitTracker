@@ -9,7 +9,6 @@ using Application.ToDoItems.Update.IsDone;
 using Carter;
 using Domain.ToDoItem;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Endpoints;
@@ -26,8 +25,8 @@ public sealed class ToDoItems : ICarterModule
             {
                 TargetDate = targetDate
             };
-            var toDoItems2 = await sender.Send(getToDoItemsQuery, cancellationToken);
-            return Results.Ok(toDoItems2);
+            var toDoItems = await sender.Send(getToDoItemsQuery, cancellationToken);
+            return Results.Ok(toDoItems);
         });
         
         app.MapGet("to-do-items", async (ISender sender) =>
@@ -96,10 +95,8 @@ public sealed class ToDoItems : ICarterModule
         app.MapDelete("to-do-items/{toDoItemId}", async (ToDoItemId toDoItemId, ISender sender) =>
         {
             var deleteToDoItemCommand = new DeleteToDoItemCommand(toDoItemId);
-            var deleteOperationResult = await sender.Send(deleteToDoItemCommand);
-            var result = deleteOperationResult.Match(deleted => Results.NoContent(),
-                notFound => Results.NotFound());
-            return result;
+            await sender.Send(deleteToDoItemCommand);
+            return Results.NoContent();
         });
     }
 }
