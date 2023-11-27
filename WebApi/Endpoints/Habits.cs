@@ -14,22 +14,26 @@ public sealed class Habits : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("habits", async (ISender sender) =>
+        app.MapGet("habits", async (ISender sender, CancellationToken cancellationToken) =>
         {
-            var habits = await sender.Send(new GetHabitsQuery());
+            var habits = await sender.Send(new GetHabitsQuery(), cancellationToken);
             return Results.Ok(habits);
         });
         
-        app.MapPatch("habits/{id:guid}", async (Guid id, ISender sender) =>
+        app.MapPatch("habits/{id:guid}", async (Guid id,
+            ISender sender,
+            CancellationToken cancellationToken) =>
         {
             var archiveHabitCommand = new ArchiveHabitCommand(new HabitId(id));
-            var updateOperationResult = await sender.Send(archiveHabitCommand);
+            var updateOperationResult = await sender.Send(archiveHabitCommand, cancellationToken);
             var result = updateOperationResult.Match(success => Results.NoContent(),
                 notFound => Results.NotFound());
             return result;
         });
         
-        app.MapPatch("habits/{id:guid}", async (Guid id, UpdateHabitDetailsRequest request, ISender sender) =>
+        app.MapPatch("habits/{id:guid}", async (Guid id, UpdateHabitDetailsRequest request,
+            ISender sender,
+            CancellationToken cancellationToken) =>
         {
             var updateHabitDetailsCommand = new UpdateHabitDetailsCommand
             {
@@ -39,13 +43,15 @@ public sealed class Habits : ICarterModule
                 DefaultEndTime = request.DefaultEndTime,
                 Description = request.Description
             };
-            await sender.Send(updateHabitDetailsCommand);
+            await sender.Send(updateHabitDetailsCommand, cancellationToken);
             return Results.NoContent();
         });
         
-        app.MapPost("habits", async (CreateHabitCommand command, ISender sender) =>
+        app.MapPost("habits", async (CreateHabitCommand command,
+            ISender sender,
+            CancellationToken cancellationToken) =>
         {
-            await sender.Send(command);
+            await sender.Send(command, cancellationToken);
             return Results.Ok();
         });
 
@@ -58,10 +64,11 @@ public sealed class Habits : ICarterModule
             return Results.NoContent();
         });
 
-        app.MapGet("habits/{id:guid}/statistic", async (Guid id, ISender sender) =>
+        app.MapGet("habits/{id:guid}/statistic", async (Guid id,
+            ISender sender, CancellationToken cancellationToken) =>
         {
             var getHabitStatisticQuery = new GetHabitStatisticQuery(new HabitId(id));
-            var getHabitStatisticResponse = await sender.Send(getHabitStatisticQuery);
+            var getHabitStatisticResponse = await sender.Send(getHabitStatisticQuery, cancellationToken);
             return Results.Ok(getHabitStatisticResponse);
         });
     }
