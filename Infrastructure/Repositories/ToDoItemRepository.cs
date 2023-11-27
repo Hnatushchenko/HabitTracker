@@ -12,10 +12,13 @@ namespace Infrastructure.Repositories;
 public sealed class ToDoItemRepository : IToDoItemRepository
 {
     private readonly IApplicationContext _applicationContext;
+    private readonly TimeProvider _timeProvider;
 
-    public ToDoItemRepository(IApplicationContext applicationContext)
+    public ToDoItemRepository(IApplicationContext applicationContext,
+        TimeProvider timeProvider)
     {
         _applicationContext = applicationContext;
+        _timeProvider = timeProvider;
     }
     
     public async Task<List<ToDoItem>> GetAllAsync()
@@ -47,7 +50,7 @@ public sealed class ToDoItemRepository : IToDoItemRepository
     /// <inheritdoc/>
     public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate)
     {
-        var utcNow = DateTimeOffset.UtcNow;
+        var utcNow = _timeProvider.GetUtcNow();
         var toDoItems = (await _applicationContext.ToDoItems
             .ToListAsync())
             .Where(toDoItem => toDoItem.DueDate.HasUtcDateEqualTo(dueDate) &&

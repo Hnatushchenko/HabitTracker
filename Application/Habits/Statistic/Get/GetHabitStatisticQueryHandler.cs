@@ -10,10 +10,13 @@ namespace Application.Habits.Statistic.Get;
 public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStatisticQuery, GetHabitStatisticResponse>
 {
     private readonly IApplicationContext _applicationContext;
+    private readonly TimeProvider _timeProvider;
 
-    public GetHabitStatisticQueryHandler(IApplicationContext applicationContext)
+
+    public GetHabitStatisticQueryHandler(IApplicationContext applicationContext, TimeProvider timeProvider)
     {
         _applicationContext = applicationContext;
+        _timeProvider = timeProvider;
     }
     
     public async Task<GetHabitStatisticResponse> Handle(GetHabitStatisticQuery request, CancellationToken cancellationToken)
@@ -27,7 +30,7 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
             })
             .AsAsyncEnumerable()
             .WithCancellation(cancellationToken);
-        var utcNow = DateTimeOffset.Now;
+        var utcNow = _timeProvider.GetUtcNow();
         var filteredDateBasedHabitStatuses = new List<DateBasedHabitStatus>();
         await foreach (var dateBasedHabitStatus in allDateBasedHabitStatuses)
         {

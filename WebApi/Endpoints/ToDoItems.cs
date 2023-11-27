@@ -29,11 +29,11 @@ public sealed class ToDoItems : ICarterModule
             return Results.Ok(toDoItems);
         });
         
-        app.MapGet("to-do-items", async (ISender sender) =>
+        app.MapGet("to-do-items", async (ISender sender, TimeProvider timeProvider) =>
         {
             var getToDoItemsQuery = new GetToDoItemsQuery
             {
-                TargetDate = DateTimeOffset.Now
+                TargetDate = timeProvider.GetUtcNow()
             };
             var toDoItems = await sender.Send(getToDoItemsQuery);
             return Results.Ok(toDoItems);

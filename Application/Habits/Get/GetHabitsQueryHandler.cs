@@ -7,12 +7,15 @@ namespace Application.Habits.Get;
 public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnumerable<HabitResponse>>
 {
     private readonly IHabitRepository _habitRepository;
+    private readonly TimeProvider _timeProvider;
     private readonly ISender _sender;
 
     public GetHabitsQueryHandler(IHabitRepository habitRepository,
+        TimeProvider timeProvider,
         ISender sender)
     {
         _habitRepository = habitRepository;
+        _timeProvider = timeProvider;
         _sender = sender;
     }
     public async Task<IEnumerable<HabitResponse>> Handle(GetHabitsQuery request, CancellationToken cancellationToken)
@@ -25,9 +28,10 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
             var datesOnly = statistic.DateBasedHabitStatuses
                 .Where(dateBasedHabitStatus => dateBasedHabitStatus.IsCompleted)
                 .Select(dateBasedHabitStatus => dateBasedHabitStatus.Date.Date).ToHashSet();
-            var yesterday = DateTimeOffset.UtcNow.AddDays(-1).UtcDateTime.Date;
+            var yesterday = _timeProvider.GetUtcNow().AddDays(-1).Date;
+            var utcNowDate = _timeProvider.GetUtcNow().Date;
             var streak = 0;
-            if (datesOnly.Contains(DateTimeOffset.UtcNow.UtcDateTime.Date))
+            if (datesOnly.Contains(utcNowDate))
             {
                 streak++;
             }

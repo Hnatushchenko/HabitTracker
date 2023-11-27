@@ -10,14 +10,17 @@ public sealed class UpdateHabitDetailsCommandHandler : IRequestHandler<UpdateHab
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;
+    private readonly TimeProvider _timeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
     public UpdateHabitDetailsCommandHandler(IToDoItemRepository toDoItemRepository, 
         IHabitRepository habitRepository,
+        TimeProvider timeProvider,
         IUnitOfWork unitOfWork)
     {
         _toDoItemRepository = toDoItemRepository;
         _habitRepository = habitRepository;
+        _timeProvider = timeProvider;
         _unitOfWork = unitOfWork;
     }
     
@@ -28,9 +31,10 @@ public sealed class UpdateHabitDetailsCommandHandler : IRequestHandler<UpdateHab
         habit.DefaultStartTime = request.DefaultStartTime;
         habit.DefaultEndTime = request.DefaultEndTime;
         habit.Description = request.Description;
+        var utcNow = _timeProvider.GetUtcNow();
         foreach (var toDoItem in habit.ToDoItems)
         {
-            if (!toDoItem.DueDate.HasUtcDateLessThen(DateTimeOffset.Now))
+            if (!toDoItem.DueDate.HasUtcDateLessThen(utcNow))
             {
                 toDoItem.Description = request.ToDoItemDescription;
                 toDoItem.StartTime = request.DefaultStartTime;
