@@ -1,8 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
-using MediatR.Pipeline;
 
-namespace Application.Common.PipelineBehaviours;
+namespace Application.Common.Services.PipelineBehaviours;
 
 public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IBaseRequest
 {

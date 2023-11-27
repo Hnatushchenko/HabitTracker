@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces.Creators;
-using Application.Common.PipelineBehaviours;
 using Application.Common.Services.Creators;
+using Application.Common.Services.PipelineBehaviours;
 using Application.Habits.Calculations;
 using FluentValidation;
 using MediatR;

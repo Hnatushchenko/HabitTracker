@@ -1,5 +1,6 @@
 ﻿using Application.Data;
 using Domain.BadHabit;
+using Helpers.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,7 +26,7 @@ public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery
             var badHabit = badHabits[i];
             var nowDate = DateTimeOffset.Now.UtcDateTime.Date;
             var startDateForStreakCalculation = GetStartDateForStreakCalculation(badHabit);
-            int streak = (nowDate - startDateForStreakCalculation).Days + 1;
+            int streak = DateTimeOffset.Now.HasUtcDateEqualTo(startDateForStreakCalculation) ? 0 : (nowDate - startDateForStreakCalculation).Days + 1;
             var badHabitResponse = new BadHabitResponse
             {
                 Description = badHabit.Description,
