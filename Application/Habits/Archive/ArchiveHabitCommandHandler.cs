@@ -1,29 +1,42 @@
 ﻿using Domain;
 using Domain.Habit;
-using Domain.OneOfTypes;
+using Domain.ToDoItem;
+using Helpers.Extensions;
 using MediatR;
-using OneOf.Types;
 
 namespace Application.Habits.Archive;
 
-public sealed class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCommand, SuccessOrNotFound>
+public sealed class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCommand>
 {
+    private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;
+    private readonly TimeProvider _timeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
-    public ArchiveHabitCommandHandler(IHabitRepository habitRepository,
+    public ArchiveHabitCommandHandler(IToDoItemRepository toDoItemRepository,
+        IHabitRepository habitRepository,
+        TimeProvider timeProvider,
         IUnitOfWork unitOfWork)
     {
+        _toDoItemRepository = toDoItemRepository;
         _habitRepository = habitRepository;
+        _timeProvider = timeProvider;
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<SuccessOrNotFound> Handle(ArchiveHabitCommand request, CancellationToken cancellationToken)
+    public async Task Handle(ArchiveHabitCommand request, CancellationToken cancellationToken)
     {
-        var getHabitResult = await _habitRepository.GetByIdDeprecatedAsync(request.HabitId);
-        if (!getHabitResult.TryPickT0(out var habit, out var notFound)) return notFound;
+        var habit = await _habitRepository.GetHabitByIdWithToDoItemsIncludedAsync(request.HabitId, cancellationToken);
         habit.IsArchived = true;
+        RemoveToDoItemsThatWereGeneratedInAdvance(habit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return new Success();
+    }
+    
+    private void RemoveToDoItemsThatWereGeneratedInAdvance(IHabitWithToDoItems habit)
+    {
+        var utcNow = _timeProvider.GetUtcNow();
+        var toDoItemsToRemove = habit.ToDoItems.Where(toDoItem => 
+            !toDoItem.DueDate.HasUtcDateLessThen(utcNow) && !toDoItem.IsDone);
+        _toDoItemRepository.RemoveRange(toDoItemsToRemove);
     }
 }

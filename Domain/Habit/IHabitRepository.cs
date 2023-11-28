@@ -8,5 +8,5 @@ public interface IHabitRepository : IRepository<IHabit, HabitId>
     /// <param name="targetDate">The date to check for habits.</param>
     /// <returns>A list of habits that match the target date.</returns>
     Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate);
-    Task<IHabitWithToDoItems> GetHabitByIdWithToDoItemsIncluded(HabitId habitId, CancellationToken cancellationToken);
+    Task<IHabitWithToDoItems> GetHabitByIdWithToDoItemsIncludedAsync(HabitId habitId, CancellationToken cancellationToken);
 }

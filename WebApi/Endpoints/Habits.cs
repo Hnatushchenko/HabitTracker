@@ -25,10 +25,8 @@ public sealed class Habits : ICarterModule
             CancellationToken cancellationToken) =>
         {
             var archiveHabitCommand = new ArchiveHabitCommand(new HabitId(id));
-            var updateOperationResult = await sender.Send(archiveHabitCommand, cancellationToken);
-            var result = updateOperationResult.Match(success => Results.NoContent(),
-                notFound => Results.NotFound());
-            return result;
+            await sender.Send(archiveHabitCommand, cancellationToken);
+            return Results.NoContent();
         });
         
         app.MapPatch("habits/{id:guid}", async (Guid id, UpdateHabitDetailsRequest request,

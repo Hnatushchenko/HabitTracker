@@ -32,7 +32,7 @@ public sealed class HabitRepository : IHabitRepository
         return habit is null ? new NotFound() : habit;
     }
 
-    public async Task<IHabitWithToDoItems> GetHabitByIdWithToDoItemsIncluded(HabitId habitId, CancellationToken cancellationToken)
+    public async Task<IHabitWithToDoItems> GetHabitByIdWithToDoItemsIncludedAsync(HabitId habitId, CancellationToken cancellationToken)
     {
         var habit = await _applicationContext.Habits
             .Include(habit => habit.ToDoItems)

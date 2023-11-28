@@ -97,4 +97,9 @@ public sealed class ToDoItemRepository : IToDoItemRepository
     {
         _applicationContext.ToDoItems.Remove(toDoItem);
     }
+    
+    public void RemoveRange(IEnumerable<ToDoItem> toDoItems)
+    {
+        _applicationContext.ToDoItems.RemoveRange(toDoItems);
+    }
 }
