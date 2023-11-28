@@ -2,6 +2,7 @@
 using Application.Common.Services.Creators;
 using Application.Common.Services.PipelineBehaviours;
 using Application.Habits.Calculations;
+using Application.Habits.Get;
 using FluentValidation;
 using MediatR;
 using MediatR.Pipeline;
@@ -13,6 +14,7 @@ public static class DependencyInjection
 {
     public static void AddApplication(this IServiceCollection services)
     {
+        services.AddSingleton<IGoodHabitStreakCalculator, GoodHabitStreakCalculator>();
         services.AddSingleton<IHabitOccurrencesCalculator, HabitOccurrencesCalculator>();
         services.AddScoped<IHabitsBasedToDoItemsCreator, HabitsBasedToDoItemsCreator>();
         var assembly = typeof(ApplicationAssemblyMarker).Assembly;

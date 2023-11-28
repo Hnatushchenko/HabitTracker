@@ -26,6 +26,15 @@ public sealed class HabitRepository : IHabitRepository
         return habits;
     }
 
+    public async Task<List<IHabitWithToDoItems>> GetAllHabitsWithToDoItemsIncludedAsync(CancellationToken cancellationToken)
+    {
+        var habits = await _applicationContext.Habits
+            .Include(habit => habit.ToDoItems)
+            .Cast<IHabitWithToDoItems>()
+            .ToListAsync(cancellationToken);
+        return habits;
+    }
+
     public async Task<OneOf<IHabit, NotFound>> GetByIdDeprecatedAsync(HabitId toDoItemId)
     {
         var habit = await _applicationContext.Habits.FindAsync(toDoItemId);
