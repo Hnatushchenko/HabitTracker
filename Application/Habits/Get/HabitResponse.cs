@@ -12,4 +12,5 @@ public sealed record HabitResponse
     public required int Streak { get; init; }
     public required TimeOnly DefaultStartTime { get; init; }
     public required TimeOnly DefaultEndTime { get; init; }
+    public required bool IsArchived { get; init; }
 }

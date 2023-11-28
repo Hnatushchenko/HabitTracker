@@ -24,14 +24,15 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
             var streak = _goodHabitStreakCalculator.GetHabitStreak(habit);
             var habitResponse = new HabitResponse
             {
-                Id = habit.Id.Value,
-                Description = habit.Description,
+                ToDoItemDescription = habit.ToDoItemDescription,
                 FrequencyTimeUnit = habit.FrequencyTimeUnit,
                 FrequencyCount = habit.FrequencyCount.Value,
-                Streak = streak,
                 DefaultStartTime = habit.DefaultStartTime,
                 DefaultEndTime = habit.DefaultEndTime,
-                ToDoItemDescription = habit.ToDoItemDescription
+                Description = habit.Description,
+                IsArchived = habit.IsArchived,
+                Id = habit.Id.Value,
+                Streak = streak,
             };
             habitResponseList.Add(habitResponse);
         }
