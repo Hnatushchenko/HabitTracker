@@ -1,5 +1,4 @@
-﻿using Domain.ToDoItem;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace Application.ToDoItems.Create;
 

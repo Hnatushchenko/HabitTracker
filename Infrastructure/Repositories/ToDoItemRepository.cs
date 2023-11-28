@@ -4,8 +4,6 @@ using Domain.ToDoItem;
 using Domain.ToDoItem.Exceptions;
 using Helpers.Extensions;
 using Microsoft.EntityFrameworkCore;
-using OneOf;
-using OneOf.Types;
 
 namespace Infrastructure.Repositories;
 
@@ -27,12 +25,6 @@ public sealed class ToDoItemRepository : IToDoItemRepository
             .ToListAsync(cancellationToken: cancellationToken);
         return toDoItems;
     }
-
-    public async Task<OneOf<ToDoItem, NotFound>> GetByIdDeprecatedAsync(ToDoItemId toDoItemId)
-    {
-        var toDoItem = await _applicationContext.ToDoItems.FindAsync(toDoItemId);
-        return toDoItem is null ? new NotFound() : toDoItem;
-    }
     
     public async Task<ToDoItem> GetByIdAsync(ToDoItemId toDoItemId, CancellationToken cancellationToken)
     {
@@ -49,11 +41,11 @@ public sealed class ToDoItemRepository : IToDoItemRepository
     }
     
     /// <inheritdoc/>
-    public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate)
+    public async Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate, CancellationToken cancellationToken)
     {
         var utcNow = _timeProvider.GetUtcNow();
         var toDoItems = (await _applicationContext.ToDoItems
-            .ToListAsync())
+            .ToListAsync(cancellationToken))
             .Where(toDoItem => toDoItem.DueDate.HasUtcDateEqualTo(dueDate) &&
                                !(toDoItem.IsHiddenOnDueDate &&
                                  toDoItem.DueDate.HasUtcDateEqualTo(utcNow)))

@@ -1,5 +1,4 @@
-﻿using Domain.Habit;
-using MediatR;
+﻿using MediatR;
 
 namespace Application.Habits.Update;
 

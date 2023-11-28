@@ -1,6 +1,4 @@
 ﻿using Application.Data;
-using Domain.Habit;
-using Domain.ToDoItem;
 using Helpers.Extensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

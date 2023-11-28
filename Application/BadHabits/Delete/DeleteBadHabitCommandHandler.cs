@@ -18,11 +18,7 @@ public sealed class DeleteBadHabitCommandHandler : IRequestHandler<DeleteBadHabi
     
     public async Task Handle(DeleteBadHabitCommand request, CancellationToken cancellationToken)
     {
-        var badHabit = await _badHabitRepository.GetById(request.BadHabitId, cancellationToken);
-        if (badHabit is null)
-        {
-            throw new Exception("bad habit not found");
-        }
+        var badHabit = await _badHabitRepository.GetByIdAsync(request.BadHabitId, cancellationToken);
         _badHabitRepository.Remove(badHabit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
     }

@@ -1,6 +1,4 @@
-﻿using System.Reflection.Emit;
-
-namespace Domain.Habit;
+﻿namespace Domain.Habit;
 
 public sealed class Habit : IHabitWithToDoItems
 {

@@ -1,7 +1,5 @@
 ﻿using Domain;
 using Domain.Habit;
-using Domain.OneOfTypes;
-using Domain.Primitives;
 using Domain.ToDoItem;
 using MediatR;
 

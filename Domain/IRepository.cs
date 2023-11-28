@@ -1,6 +1,4 @@
-﻿using OneOf.Types;
-
-namespace Domain;
+﻿namespace Domain;
 
 public interface IRepository<TEntity, in TEntityId>
 {

@@ -1,6 +1,4 @@
 ﻿using Domain;
-using Domain.OneOfTypes;
-using Domain.Primitives;
 using Domain.ToDoItem;
 using MediatR;
 

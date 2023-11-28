@@ -88,11 +88,11 @@ public sealed class HabitRepository : IHabitRepository
     }
 
     /// <inheritdoc />
-    public async Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate)
+    public async Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
         var activeHabits = await _applicationContext.Habits
             .Where(habit => !habit.IsArchived)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
         var filteredHabits = activeHabits
             .Where(habit => _habitOccurrencesCalculator.ShouldHabitOccurOnSpecifiedDate(habit, targetDate))
             .Cast<IHabit>()

@@ -7,7 +7,6 @@ using Application.BadHabits.GetStatistic.GetBadHabitStatistic;
 using Carter;
 using Domain.BadHabit;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace WebApi.Endpoints;
 

@@ -2,8 +2,9 @@
 
 public sealed class BadHabit
 {
+    private List<BadHabitOccurrence>? _occurrences;
     public required BadHabitId Id { get; set; }
     public required string Description { get; set; }
     public required DateTimeOffset StartDate { get; set; }
-    public List<BadHabitOccurrence> Occurrences { get; } = new();
+    public IReadOnlyList<BadHabitOccurrence> Occurrences => _occurrences ??= new List<BadHabitOccurrence>();
 }

@@ -33,9 +33,18 @@ public sealed class BadHabitRepository : IBadHabitRepository
         _applicationContext.BadHabits.Remove(badHabit);
     }
 
-    public async Task<BadHabit?> GetById(BadHabitId badHabitId, CancellationToken cancellationToken)
+    public async Task<BadHabit> GetByIdAsync(BadHabitId badHabitId, CancellationToken cancellationToken)
     {
-        return await _applicationContext.BadHabits.FindAsync(badHabitId, cancellationToken);
+        var badHabit = await _applicationContext.BadHabits.FindAsync(badHabitId, cancellationToken);
+        if (badHabit is null)
+        {
+            throw new BadHabitNotFoundException
+            {
+                ModelId = badHabitId.Value
+            };
+        }
+
+        return badHabit;
     }
 
     public async Task RemoveOccurrenceAsync(BadHabitId badHabitId,

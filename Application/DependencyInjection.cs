@@ -5,7 +5,6 @@ using Application.Habits.Calculations;
 using Application.Habits.Get;
 using FluentValidation;
 using MediatR;
-using MediatR.Pipeline;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;

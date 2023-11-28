@@ -22,7 +22,7 @@ public sealed class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
     
     public async Task EnsureHabitsBasedToDoItemsCreatedAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
-        var activeHabits = await _habitRepository.GetActiveHabitsByTargetDateAsync(targetDate);
+        var activeHabits = await _habitRepository.GetActiveHabitsByTargetDateAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate, cancellationToken);
         foreach (var habit in activeHabits)
         {

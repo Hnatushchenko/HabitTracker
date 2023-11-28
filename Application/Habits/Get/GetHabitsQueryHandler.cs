@@ -1,5 +1,4 @@
-﻿using Application.Habits.Statistic.Get;
-using Domain.Habit;
+﻿using Domain.Habit;
 using MediatR;
 
 namespace Application.Habits.Get;

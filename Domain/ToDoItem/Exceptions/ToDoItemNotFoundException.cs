@@ -2,7 +2,4 @@
 
 namespace Domain.ToDoItem.Exceptions;
 
-public sealed class ToDoItemNotFoundException : ModelNotFoundException
-{
-    
-}
+public sealed class ToDoItemNotFoundException : ModelNotFoundException;

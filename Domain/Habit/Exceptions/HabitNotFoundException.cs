@@ -2,7 +2,4 @@
 
 namespace Domain.Habit.Exceptions;
 
-public sealed class HabitNotFoundException : ModelNotFoundException
-{
-    
-}
+public sealed class HabitNotFoundException : ModelNotFoundException;

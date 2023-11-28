@@ -8,8 +8,9 @@ public interface IToDoItemRepository : IRepository<ToDoItem, ToDoItemId>
     /// Gets a list of ToDoItem objects that have a specified due date.
     /// </summary>
     /// <param name="dueDate">The date by which the ToDoItems are expected to be completed or delivered.</param>
+    /// <param name="cancellationToken">A <see cref="CancellationToken" /> to observe while waiting for the task to complete.</param>
     /// <returns>A list of ToDoItem objects that have the same due date, or an empty list if none are found.</returns>
-    Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate);
+    Task<List<ToDoItem>> GetByDueDateAndNotHiddenAsync(DateTimeOffset dueDate, CancellationToken cancellationToken);
     Task<List<ToDoItem>> GetByDueDateWithIncludedHabitAsync(DateTimeOffset dueDate, CancellationToken cancellationToken);
     Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId, CancellationToken cancellationToken);
     Task<List<ToDoItem>> GetChildrenByParentToDoItemIdAsync(ToDoItemId parentToDoItemId, CancellationToken cancellationToken);
