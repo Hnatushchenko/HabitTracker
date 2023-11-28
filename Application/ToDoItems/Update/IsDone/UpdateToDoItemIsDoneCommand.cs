@@ -4,4 +4,5 @@ using MediatR;
 
 namespace Application.ToDoItems.Update.IsDone;
 
-public sealed record UpdateToDoItemIsDoneCommand(ToDoItemId ToDoItemId, bool NewIsDoneValue) : IRequest<UpdatedOrNotFound>;
+public sealed record UpdateToDoItemIsDoneCommand(ToDoItemId ToDoItemId,
+    bool NewIsDoneValue) : IRequest;

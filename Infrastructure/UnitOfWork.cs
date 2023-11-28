@@ -11,7 +11,7 @@ public sealed class UnitOfWork : IUnitOfWork
     {
         _applicationContext = applicationContext;
     }
-    public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
+    public async Task SaveChangesAsync(CancellationToken cancellationToken)
     {
         await _applicationContext.SaveChangesAsync(cancellationToken);
     }

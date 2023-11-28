@@ -48,10 +48,8 @@ public sealed class ToDoItems : ICarterModule
         {
             var updateToDoItemIdDoneCommand = new UpdateToDoItemIsDoneCommand(toDoItemId,
                 request.NewIsDoneValue);
-            var updateOperationResult = await sender.Send(updateToDoItemIdDoneCommand, cancellationToken);
-            var result = updateOperationResult.Match(updated => Results.NoContent(),
-                notFound => Results.NotFound());
-            return result;
+            await sender.Send(updateToDoItemIdDoneCommand, cancellationToken);
+            return Results.NoContent();
         });
         
         app.MapPatch("to-do-items/details/{toDoItemId:guid}", async (ToDoItemId toDoItemId,
@@ -61,10 +59,8 @@ public sealed class ToDoItems : ICarterModule
         {
             var updateToDoItemDetailsCommand = new UpdateToDoItemDetailsCommand(toDoItemId,
                 request.StartTime, request.EndTime, request.Description);
-            var updateOperationResult = await sender.Send(updateToDoItemDetailsCommand, cancellationToken);
-            var result = updateOperationResult.Match(updated => Results.NoContent(),
-                notFound => Results.NotFound());
-            return result;
+            await sender.Send(updateToDoItemDetailsCommand, cancellationToken);
+            return Results.NoContent();
         });
 
         app.MapPatch("to-do-items/{toDoItemId:guid}/due-tomorrow", async (ToDoItemId toDoItemId,

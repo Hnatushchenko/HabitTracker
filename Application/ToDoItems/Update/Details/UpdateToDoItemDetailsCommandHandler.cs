@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Update.Details;
 
-public sealed class UpdateToDoItemDetailsCommandHandler : IRequestHandler<UpdateToDoItemDetailsCommand, UpdatedOrNotFound>
+public sealed class UpdateToDoItemDetailsCommandHandler : IRequestHandler<UpdateToDoItemDetailsCommand>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,15 +18,13 @@ public sealed class UpdateToDoItemDetailsCommandHandler : IRequestHandler<Update
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<UpdatedOrNotFound> Handle(UpdateToDoItemDetailsCommand request,
+    public async Task Handle(UpdateToDoItemDetailsCommand request,
         CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
-        if (!queryResult.TryPickT0(out var toDoItem, out var notFound)) return notFound;
+        var toDoItem = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId, cancellationToken);
         toDoItem.StartTime = request.StartTime;
         toDoItem.EndTime = request.EndTime;
         toDoItem.Description = request.Description;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return new Updated();
     }
 }

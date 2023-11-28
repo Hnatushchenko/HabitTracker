@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Update.IsDone;
 
-public sealed class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItemIsDoneCommand, UpdatedOrNotFound>
+public sealed class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateToDoItemIsDoneCommand>
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IUnitOfWork _unitOfWork;
@@ -18,13 +18,11 @@ public sealed class UpdateToDoItemIsDoneCommandHandler : IRequestHandler<UpdateT
         _unitOfWork = unitOfWork;
     }
     
-    public async Task<UpdatedOrNotFound> Handle(UpdateToDoItemIsDoneCommand request,
+    public async Task Handle(UpdateToDoItemIsDoneCommand request,
         CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
-        if (!queryResult.TryPickT0(out var toDoItem, out var notFound)) return notFound;
+        var toDoItem = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId, cancellationToken);
         toDoItem.IsDone = request.NewIsDoneValue;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        return new Updated();
     }
 }

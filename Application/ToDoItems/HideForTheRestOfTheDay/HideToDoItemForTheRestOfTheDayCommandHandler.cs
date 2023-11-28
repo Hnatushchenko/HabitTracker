@@ -18,11 +18,8 @@ public sealed class HideToDoItemForTheRestOfTheDayCommandHandler : IRequestHandl
     
     public async Task Handle(HideToDoItemForTheRestOfTheDayCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
-        if (queryResult.TryPickT0(out var toDoItem, out var notFound))
-        {
-            toDoItem.IsHiddenOnDueDate = true;
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        var toDoItem = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId, cancellationToken);
+        toDoItem.IsHiddenOnDueDate = true;
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

@@ -18,11 +18,8 @@ public sealed class DueToDoItemTomorrowCommandHandler : IRequestHandler<DueToDoI
     
     public async Task Handle(DueToDoItemTomorrowCommand request, CancellationToken cancellationToken)
     {
-        var queryResult = await _toDoItemRepository.GetByIdDeprecatedAsync(request.ToDoItemId);
-        if (queryResult.TryPickT0(out var toDoItem, out var notFound))
-        {
-            toDoItem.DueDate = toDoItem.DueDate.AddDays(1);
-            await _unitOfWork.SaveChangesAsync(cancellationToken);
-        }
+        var toDoItem = await _toDoItemRepository.GetByIdAsync(request.ToDoItemId, cancellationToken);
+        toDoItem.DueDate = toDoItem.DueDate.AddDays(1);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }
