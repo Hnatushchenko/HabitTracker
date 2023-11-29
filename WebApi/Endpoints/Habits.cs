@@ -3,6 +3,7 @@ using Application.Habits.Create;
 using Application.Habits.Delete;
 using Application.Habits.Get;
 using Application.Habits.Statistic.Get;
+using Application.Habits.Unarchive;
 using Application.Habits.Update;
 using Carter;
 using Domain.Habit;
@@ -20,12 +21,21 @@ public sealed class Habits : ICarterModule
             return Results.Ok(habits);
         });
         
-        app.MapPatch("habits/{id:guid}", async (Guid id,
+        app.MapPatch("habits/{id:guid}/archive", async (Guid id,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
             var archiveHabitCommand = new ArchiveHabitCommand(new HabitId(id));
             await sender.Send(archiveHabitCommand, cancellationToken);
+            return Results.NoContent();
+        });
+        
+        app.MapPatch("habits/{id:guid}/unarchive", async (Guid id,
+            ISender sender,
+            CancellationToken cancellationToken) =>
+        {
+            var unarchiveHabitCommand = new UnarchiveHabitCommand(new HabitId(id));
+            await sender.Send(unarchiveHabitCommand, cancellationToken);
             return Results.NoContent();
         });
         
