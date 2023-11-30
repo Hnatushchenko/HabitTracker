@@ -1,17 +1,17 @@
-﻿using Application.Common.Interfaces.Creators;
+﻿using Application.Common.Interfaces.Creators.MissingHabitBasedToDoItemsCreator;
 using Domain;
 using Domain.Habit;
 using Domain.ToDoItem;
 
-namespace Application.Common.Services.Creators;
+namespace Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 
-public sealed class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
+public sealed class MissingHabitBasedToDoItemsCreator : IMissingHabitsBasedToDoItemsCreator
 {
     private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public HabitsBasedToDoItemsCreator(IToDoItemRepository toDoItemRepository,
+    public MissingHabitBasedToDoItemsCreator(IToDoItemRepository toDoItemRepository,
         IHabitRepository habitRepository,
         IUnitOfWork unitOfWork)
     {
@@ -20,7 +20,7 @@ public sealed class HabitsBasedToDoItemsCreator : IHabitsBasedToDoItemsCreator
         _unitOfWork = unitOfWork;
     }
     
-    public async Task EnsureHabitsBasedToDoItemsCreatedAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
+    public async Task CreateMissingToDoItemsAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
         var activeHabits = await _habitRepository.GetActiveHabitsByTargetDateAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate, cancellationToken);

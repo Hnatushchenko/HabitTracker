@@ -1,4 +1,4 @@
-﻿using Application.Common.Interfaces.Creators;
+﻿using Application.Common.Interfaces.Creators.MissingHabitBasedToDoItemsCreator;
 using Domain.ToDoItem;
 using MediatR;
 
@@ -6,19 +6,19 @@ namespace Application.ToDoItems.Get;
 
 public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery, IEnumerable<ToDoItemResponse>>
 {
-    private readonly IHabitsBasedToDoItemsCreator _habitsBasedToDoItemsCreator;
+    private readonly IMissingHabitsBasedToDoItemsCreator _missingHabitsBasedToDoItemsCreator;
     private readonly IToDoItemRepository _toDoItemRepository;
 
-    public GetToDoItemsQueryHandler(IHabitsBasedToDoItemsCreator habitsBasedToDoItemsCreator,
+    public GetToDoItemsQueryHandler(IMissingHabitsBasedToDoItemsCreator missingHabitsBasedToDoItemsCreator,
         IToDoItemRepository toDoItemRepository)
     {
-        _habitsBasedToDoItemsCreator = habitsBasedToDoItemsCreator;
+        _missingHabitsBasedToDoItemsCreator = missingHabitsBasedToDoItemsCreator;
         _toDoItemRepository = toDoItemRepository;
     }
     public async Task<IEnumerable<ToDoItemResponse>> Handle(GetToDoItemsQuery request, CancellationToken cancellationToken)
     {
         var targetDate = request.TargetDate;
-        await _habitsBasedToDoItemsCreator.EnsureHabitsBasedToDoItemsCreatedAsync(targetDate, cancellationToken);
+        await _missingHabitsBasedToDoItemsCreator.CreateMissingToDoItemsAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateAndNotHiddenAsync(targetDate, cancellationToken);
         var toDoItemResponseList = ConvertAllToDoItemsToTree(toDoItems);
         return toDoItemResponseList;
@@ -42,7 +42,7 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
         return toDoItemResponse;
     }
     
-    private List<ToDoItemResponse> ConvertAllToDoItemsToTree(IReadOnlyCollection<ToDoItem> toDoItems)
+    private static List<ToDoItemResponse> ConvertAllToDoItemsToTree(IReadOnlyCollection<ToDoItem> toDoItems)
     {
         List<ToDoItemResponse> rootToDoItemResponseList = new();
         var parents = toDoItems.Where(t => t.ParentId is null);
@@ -64,6 +64,4 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
             }
         }
     }
-    
-    
 }

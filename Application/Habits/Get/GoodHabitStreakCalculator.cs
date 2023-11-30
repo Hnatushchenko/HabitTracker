@@ -1,4 +1,5 @@
 ﻿using Domain.Habit;
+using Domain.ToDoItem;
 using Helpers.Extensions;
 
 namespace Application.Habits.Get;
@@ -16,9 +17,14 @@ public sealed class GoodHabitStreakCalculator : IGoodHabitStreakCalculator
     {
         var utcNow = _timeProvider.GetUtcNow();
         var toDoItems = habit.ToDoItems
-                .Where(toDoItem => toDoItem.DueDate.HasUtcDateLessThen(utcNow) || 
-                                   (toDoItem.DueDate.HasUtcDateEqualTo(utcNow) && toDoItem.IsDone))
-                .OrderByDescending(toDoItem => toDoItem.DueDate);
+            .Where(toDoItem => toDoItem.DueDate.HasUtcDateLessThen(utcNow) || 
+                               (toDoItem.DueDate.HasUtcDateEqualTo(utcNow) && toDoItem.IsDone))
+            .OrderByDescending(toDoItem => toDoItem.DueDate);
+        return CalculateStreak(toDoItems);
+    }
+
+    private static int CalculateStreak(IEnumerable<ToDoItem> toDoItems)
+    {
         var streak = 0;
         foreach (var toDoItem in toDoItems)
         {

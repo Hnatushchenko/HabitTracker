@@ -36,7 +36,7 @@ public sealed class ArchiveHabitCommandHandler : IRequestHandler<ArchiveHabitCom
     {
         var utcNow = _timeProvider.GetUtcNow();
         var toDoItemsToRemove = habit.ToDoItems.Where(toDoItem => 
-            !toDoItem.DueDate.HasUtcDateLessThen(utcNow) && !toDoItem.IsDone);
+            toDoItem.DueDate.HasUtcDateGreaterThanOrEqualTo(utcNow) && !toDoItem.IsDone);
         _toDoItemRepository.RemoveRange(toDoItemsToRemove);
     }
 }

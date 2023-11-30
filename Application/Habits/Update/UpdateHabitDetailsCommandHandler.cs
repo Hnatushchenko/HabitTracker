@@ -1,6 +1,5 @@
 ﻿using Domain;
 using Domain.Habit;
-using Domain.ToDoItem;
 using Helpers.Extensions;
 using MediatR;
 
@@ -8,17 +7,14 @@ namespace Application.Habits.Update;
 
 public sealed class UpdateHabitDetailsCommandHandler : IRequestHandler<UpdateHabitDetailsCommand>
 {
-    private readonly IToDoItemRepository _toDoItemRepository;
     private readonly IHabitRepository _habitRepository;
     private readonly TimeProvider _timeProvider;
     private readonly IUnitOfWork _unitOfWork;
 
-    public UpdateHabitDetailsCommandHandler(IToDoItemRepository toDoItemRepository, 
-        IHabitRepository habitRepository,
+    public UpdateHabitDetailsCommandHandler(IHabitRepository habitRepository,
         TimeProvider timeProvider,
         IUnitOfWork unitOfWork)
     {
-        _toDoItemRepository = toDoItemRepository;
         _habitRepository = habitRepository;
         _timeProvider = timeProvider;
         _unitOfWork = unitOfWork;
