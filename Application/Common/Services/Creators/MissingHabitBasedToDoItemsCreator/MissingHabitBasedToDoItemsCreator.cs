@@ -26,7 +26,7 @@ public sealed class MissingHabitBasedToDoItemsCreator : IMissingHabitsBasedToDoI
         var toDoItems = await _toDoItemRepository.GetByDueDateWithIncludedHabitAsync(targetDate, cancellationToken);
         foreach (var habit in activeHabits)
         {
-            if (toDoItems.All(toDoItem => toDoItem.HabitId != habit.Id))
+            if (toDoItems.TrueForAll(toDoItem => toDoItem.HabitId != habit.Id))
             {
                 var toDoItem = new ToDoItem
                 {

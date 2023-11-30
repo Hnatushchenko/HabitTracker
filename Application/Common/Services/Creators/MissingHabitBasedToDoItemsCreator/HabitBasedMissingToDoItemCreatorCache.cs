@@ -8,19 +8,19 @@ namespace Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator
 
 public sealed class HabitBasedMissingToDoItemCreatorCache : IHabitBasedMissingToDoItemCreatorCache, INotificationHandler<HabitCreatedNotification>
 {
-    private readonly ConcurrentDictionary<DateOnly, bool> _cache = new();
+    private static readonly ConcurrentDictionary<DateOnly, bool> Cache = new();
     
     public bool TryAdd(DateTimeOffset date)
     {
         var dateOnly = date.ToDateOnly();
-        var isAdded = _cache.TryAdd(dateOnly, true);
+        var isAdded = Cache.TryAdd(dateOnly, true);
         return isAdded;
     }
 
     public Task Handle(HabitCreatedNotification notification, CancellationToken cancellationToken)
     {
         var startDate = notification.Habit.StartDate.ToDateOnly();
-        _cache.RemoveAll(pair => pair.Key >= startDate);
+        Cache.RemoveAll(pair => pair.Key >= startDate);
         return Task.CompletedTask;
     }
 }
