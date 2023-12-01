@@ -13,7 +13,7 @@ public sealed class HabitOccurrencesCalculator : IHabitOccurrencesCalculator
         { DayOfWeek.Wednesday, DayOfWeekFrequency.OnWednesdays },
         { DayOfWeek.Thursday, DayOfWeekFrequency.OnThursdays },
         { DayOfWeek.Friday, DayOfWeekFrequency.OnFridays },
-        { DayOfWeek.Saturday, DayOfWeekFrequency.OnSaturdays },
+        { DayOfWeek.Saturday, DayOfWeekFrequency.OnSaturdays }
     };
     /// <inheritdoc/>
     public bool ShouldHabitOccurOnSpecifiedDate(Habit habit, DateTimeOffset targetDate)

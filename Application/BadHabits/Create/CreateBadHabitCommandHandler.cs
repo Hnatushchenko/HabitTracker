@@ -22,7 +22,7 @@ public sealed class CreateBadHabitCommandHandler : IRequestHandler<CreateBadHabi
         {
             Id = new BadHabitId(Guid.NewGuid()),
             Description = request.Description,
-            StartDate = request.StartDate,
+            StartDate = request.StartDate
         };
         _badHabitRepository.AddBadHabit(badHabit);
         await _unitOfWork.SaveChangesAsync(cancellationToken);

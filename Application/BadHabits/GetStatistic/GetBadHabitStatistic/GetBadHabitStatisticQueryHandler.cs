@@ -28,7 +28,7 @@ public sealed class GetBadHabitStatisticQueryHandler : IRequestHandler<GetBadHab
         var getBadHabitStatisticResponse = new GetBadHabitStatisticResponse
         {
             StartDate = badHabit.StartDate,
-            Occurrences = occurrences,
+            Occurrences = occurrences
         };
         return getBadHabitStatisticResponse;
     }

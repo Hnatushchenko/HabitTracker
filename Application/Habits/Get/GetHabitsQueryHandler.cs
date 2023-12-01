@@ -18,11 +18,10 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
     public async Task<IEnumerable<HabitResponse>> Handle(GetHabitsQuery request, CancellationToken cancellationToken)
     {
         var habits = await _habitRepository.GetAllHabitsWithToDoItemsIncludedAsync(cancellationToken);
-        var habitResponseList = new List<HabitResponse>(habits.Count);
-        foreach (var habit in habits)
+        var habitResponseList = habits.Select(habit =>
         {
             var streak = _goodHabitStreakCalculator.GetHabitStreak(habit);
-            var habitResponse = new HabitResponse
+            return new HabitResponse
             {
                 ToDoItemDescription = habit.ToDoItemDescription,
                 FrequencyTimeUnit = habit.FrequencyTimeUnit,
@@ -32,10 +31,9 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
                 Description = habit.Description,
                 IsArchived = habit.IsArchived,
                 Id = habit.Id.Value,
-                Streak = streak,
+                Streak = streak
             };
-            habitResponseList.Add(habitResponse);
-        }
+        });
         return habitResponseList;
     }
 }

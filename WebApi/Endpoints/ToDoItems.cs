@@ -88,7 +88,7 @@ public sealed class ToDoItems : ICarterModule
             var swapToDoItemsCommand = new SwapToDoItemsCommand
             {
                 FirstToDoItemId = new ToDoItemId(request.FirstToDoItemId),
-                SecondToDoItemId = new ToDoItemId(request.SecondToDoItemId),
+                SecondToDoItemId = new ToDoItemId(request.SecondToDoItemId)
             };
             await sender.Send(swapToDoItemsCommand, cancellationToken);
             return Results.NoContent();

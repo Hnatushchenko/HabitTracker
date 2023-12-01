@@ -11,7 +11,5 @@ public sealed class DuplicateBadHabitOccurrenceError
 }
 
 [GenerateOneOf]
-public sealed partial class SuccessOrDuplicateBadHabitOccurrenceError : OneOfBase<Success, DuplicateBadHabitOccurrenceError>
-{
-}
+public sealed partial class SuccessOrDuplicateBadHabitOccurrenceError : OneOfBase<Success, DuplicateBadHabitOccurrenceError>;
 

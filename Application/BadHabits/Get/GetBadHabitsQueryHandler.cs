@@ -34,7 +34,7 @@ public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery
             {
                 Description = badHabit.Description,
                 Streak = streak,
-                BadHabitId = badHabit.Id.Value,
+                BadHabitId = badHabit.Id.Value
             };
             badHabitResponseList[i] = badHabitResponse;
         }
