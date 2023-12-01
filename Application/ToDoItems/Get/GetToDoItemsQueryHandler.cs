@@ -1,4 +1,4 @@
-﻿using Application.Common.Interfaces.Creators.MissingHabitBasedToDoItemsCreator;
+﻿using Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 using Domain.ToDoItem;
 using MediatR;
 
@@ -18,6 +18,7 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
     public async Task<IEnumerable<ToDoItemResponse>> Handle(GetToDoItemsQuery request, CancellationToken cancellationToken)
     {
         var targetDate = request.TargetDate;
+        
         await _missingHabitsBasedToDoItemsCreator.CreateMissingToDoItemsAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateAndNotHiddenAsync(targetDate, cancellationToken);
         var toDoItemResponseList = ConvertAllToDoItemsToTree(toDoItems);

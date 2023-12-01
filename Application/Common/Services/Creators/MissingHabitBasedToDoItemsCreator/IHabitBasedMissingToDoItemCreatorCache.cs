@@ -1,4 +1,4 @@
-﻿namespace Application.Common.Interfaces.Creators.MissingHabitBasedToDoItemsCreator;
+﻿namespace Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 
 public interface IHabitBasedMissingToDoItemCreatorCache
 {
