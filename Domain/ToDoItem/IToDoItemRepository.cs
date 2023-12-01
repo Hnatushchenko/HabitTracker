@@ -15,4 +15,5 @@ public interface IToDoItemRepository : IRepository<ToDoItem, ToDoItemId>
     Task RemoveToDoItemsByTheirHabitAsync(HabitId habitId, CancellationToken cancellationToken);
     Task<List<ToDoItem>> GetChildrenByParentToDoItemIdAsync(ToDoItemId parentToDoItemId, CancellationToken cancellationToken);
     void RemoveRange(IEnumerable<ToDoItem> toDoItems);
+    Task<List<ToDoItem>> GetUncompletedToDoItemsWhereDueDateIsLessThenAsync(DateTimeOffset dateTimeOffset, CancellationToken cancellationToken);
 }
