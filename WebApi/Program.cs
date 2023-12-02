@@ -7,6 +7,7 @@ using WebApi.Extensions;
 using WebApi.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
+var configuration = builder.Configuration;
 
 builder.Services.AddCarter();
 
@@ -15,7 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddApplication();
-builder.Services.AddInfrastructure();
+builder.Services.AddInfrastructure(configuration);
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {

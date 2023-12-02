@@ -13,12 +13,9 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
     public DbSet<BadHabit> BadHabits => Set<BadHabit>();
     public DbSet<BadHabitOccurrence> BadHabitOccurrences => Set<BadHabitOccurrence>();
     
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\mssqllocaldb;Database=UltimateSelfimprovementDbs5;Trusted_Connection=True;");
-    }
-    
+    public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        : base(options) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);

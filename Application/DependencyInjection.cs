@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 using Application.Common.Services.PipelineBehaviours;
+using Application.Common.Services.Updaters;
 using Application.Habits.Calculations;
 using Application.Habits.Get;
 using FluentValidation;
@@ -15,6 +16,7 @@ public static class DependencyInjection
     
     public static void AddApplication(this IServiceCollection services)
     {
+        services.AddScoped<IOverdueTasksDueDateUpdater, OverdueTasksDueDateUpdater>();
         services.AddSingleton<IGoodHabitStreakCalculator, GoodHabitStreakCalculator>();
         services.AddSingleton<IHabitOccurrencesCalculator, HabitOccurrencesCalculator>();
         services.AddSingleton<IHabitBasedMissingToDoItemCreatorCache, HabitBasedMissingToDoItemCreatorCache>();
