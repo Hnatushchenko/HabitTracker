@@ -30,7 +30,7 @@ public sealed class UpdateHabitDetailsCommandHandler : IRequestHandler<UpdateHab
         var utcNow = _timeProvider.GetUtcNow();
         foreach (var toDoItem in habit.ToDoItems)
         {
-            if (!toDoItem.DueDate.HasUtcDateLessThen(utcNow))
+            if (!toDoItem.DueDate.HasUtcDateLessThan(utcNow))
             {
                 toDoItem.Description = request.ToDoItemDescription;
                 toDoItem.StartTime = request.DefaultStartTime;

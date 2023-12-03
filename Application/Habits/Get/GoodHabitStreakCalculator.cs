@@ -17,7 +17,7 @@ public sealed class GoodHabitStreakCalculator : IGoodHabitStreakCalculator
     {
         var utcNow = _timeProvider.GetUtcNow();
         var toDoItems = habit.ToDoItems
-            .Where(toDoItem => toDoItem.DueDate.HasUtcDateLessThen(utcNow) || 
+            .Where(toDoItem => toDoItem.DueDate.HasUtcDateLessThan(utcNow) || 
                                (toDoItem.DueDate.HasUtcDateEqualTo(utcNow) && toDoItem.IsDone))
             .OrderByDescending(toDoItem => toDoItem.DueDate);
         return CalculateStreak(toDoItems);

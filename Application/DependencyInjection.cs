@@ -2,7 +2,9 @@
 using Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 using Application.Common.Services.PipelineBehaviours;
 using Application.Common.Services.Updaters;
-using Application.Habits.Calculations;
+using Application.Frequency.DayOfWeekToDayOfWeekFrequencyMapper;
+using Application.Habits.Calculations.DateTimeOffsetIncrementer;
+using Application.Habits.Calculations.HabitOccurrencesCalculator;
 using Application.Habits.Get;
 using FluentValidation;
 using MediatR;
@@ -20,6 +22,8 @@ public static class DependencyInjection
         services.AddSingleton<IGoodHabitStreakCalculator, GoodHabitStreakCalculator>();
         services.AddSingleton<IHabitOccurrencesCalculator, HabitOccurrencesCalculator>();
         services.AddSingleton<IHabitBasedMissingToDoItemCreatorCache, HabitBasedMissingToDoItemCreatorCache>();
+        services.AddSingleton<IDayOfWeekToDayOfWeekFrequencyMapper, DayOfWeekToDayOfWeekFrequencyMapper>();
+        services.AddSingleton<IDateTimeOffsetIncrementer, DateTimeOffsetIncrementer>();
         services.AddScoped<MissingHabitBasedToDoItemsCreator>();
         services.AddScoped<IMissingHabitsBasedToDoItemsCreator>(serviceProvider =>
         {

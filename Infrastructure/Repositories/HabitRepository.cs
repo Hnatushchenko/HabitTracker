@@ -1,5 +1,5 @@
 ﻿using Application.Data;
-using Application.Habits.Calculations;
+using Application.Habits.Calculations.HabitOccurrencesCalculator;
 using Domain.Habit;
 using Domain.Habit.Exceptions;
 using Microsoft.EntityFrameworkCore;

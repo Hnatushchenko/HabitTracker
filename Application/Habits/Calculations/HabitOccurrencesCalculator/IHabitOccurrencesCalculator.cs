@@ -1,6 +1,6 @@
 ﻿using Domain.Habit;
 
-namespace Application.Habits.Calculations;
+namespace Application.Habits.Calculations.HabitOccurrencesCalculator;
 
 public interface IHabitOccurrencesCalculator
 {
@@ -11,4 +11,6 @@ public interface IHabitOccurrencesCalculator
     /// <param name="targetDate">The date to determine the habit occurrence.</param>
     /// <returns>True if the habit should occur on the specified date, false otherwise.</returns>
     bool ShouldHabitOccurOnSpecifiedDate(Habit habit, DateTimeOffset targetDate);
+
+    IEnumerable<DateTimeOffset> GetHabitOccurrences(Habit habit, DateTimeOffset upToDateInclusive);
 }

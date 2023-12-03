@@ -32,7 +32,7 @@ public sealed class GetHabitStatisticQueryHandler : IRequestHandler<GetHabitStat
         var filteredDateBasedHabitStatuses = new List<DateBasedHabitStatus>();
         await foreach (var dateBasedHabitStatus in allDateBasedHabitStatuses)
         {
-            if (dateBasedHabitStatus.Date.HasUtcDateLessThen(utcNow) || 
+            if (dateBasedHabitStatus.Date.HasUtcDateLessThan(utcNow) || 
                 (dateBasedHabitStatus.Date.HasUtcDateEqualTo(utcNow) && dateBasedHabitStatus.IsCompleted))
             {
                 filteredDateBasedHabitStatuses.Add(dateBasedHabitStatus);

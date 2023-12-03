@@ -8,15 +8,21 @@ public static class DateTimeOffsetExtensions
         return result;
     }
     
-    public static bool HasUtcDateLessThen(this DateTimeOffset dateTimeOffset, DateTimeOffset other)
+    public static bool HasUtcDateLessThan(this DateTimeOffset dateTimeOffset, DateTimeOffset other)
     {
         var result = dateTimeOffset.UtcDateTime.Date < other.UtcDateTime.Date;
         return result;
     }
     
+    public static bool HasUtcDateLessThanOrEqualTo(this DateTimeOffset source, DateTimeOffset other)
+    {
+        var result = source.HasUtcDateLessThan(other) || source.HasUtcDateEqualTo(other);
+        return result;
+    }
+    
     public static bool HasUtcDateGreaterThanOrEqualTo(this DateTimeOffset source, DateTimeOffset other)
     {
-        return !source.HasUtcDateLessThen(other);
+        return !source.HasUtcDateLessThan(other);
     }
     
     public static DateOnly ToDateOnly(this DateTimeOffset source)
