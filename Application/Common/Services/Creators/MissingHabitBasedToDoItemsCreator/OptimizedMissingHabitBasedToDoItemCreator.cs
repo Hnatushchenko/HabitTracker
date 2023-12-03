@@ -1,6 +1,6 @@
 ﻿namespace Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 
-public class OptimizedMissingHabitBasedToDoItemCreator : IMissingHabitsBasedToDoItemsCreator
+public sealed class OptimizedMissingHabitBasedToDoItemCreator : IMissingHabitsBasedToDoItemsCreator
 {
     private readonly IMissingHabitsBasedToDoItemsCreator _missingHabitsBasedToDoItemsCreator;
     private readonly IHabitBasedMissingToDoItemCreatorCache _cache;

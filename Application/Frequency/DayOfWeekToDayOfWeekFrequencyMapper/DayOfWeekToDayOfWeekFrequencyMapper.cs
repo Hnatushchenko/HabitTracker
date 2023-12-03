@@ -2,7 +2,7 @@
 
 namespace Application.Frequency.DayOfWeekToDayOfWeekFrequencyMapper;
 
-public class DayOfWeekToDayOfWeekFrequencyMapper : IDayOfWeekToDayOfWeekFrequencyMapper
+public sealed class DayOfWeekToDayOfWeekFrequencyMapper : IDayOfWeekToDayOfWeekFrequencyMapper
 {
     public DayOfWeekFrequency Map(DayOfWeek dayOfWeek)
     {

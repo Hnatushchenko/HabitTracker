@@ -109,10 +109,10 @@ public sealed class ToDoItemRepository : IToDoItemRepository
         _applicationContext.ToDoItems.RemoveRange(toDoItems);
     }
     
-    public async Task<List<ToDoItem>> GetUncompletedToDoItemsWhereDueDateIsLessThenAsync(DateTimeOffset dateTimeOffset, CancellationToken cancellationToken)
+    public async Task<List<ToDoItem>> GetUncompletedToDoItemsThatAreNotBasedOnHabitsWhereDueDateIsLessThenAsync(DateTimeOffset dateTimeOffset, CancellationToken cancellationToken)
     {
         var toDoItems = await _applicationContext.ToDoItems
-            .Where(toDoItem => toDoItem.DueDate < dateTimeOffset && !toDoItem.IsDone)
+            .Where(toDoItem => toDoItem.DueDate < dateTimeOffset && !toDoItem.IsDone && toDoItem.HabitId == null)
             .ToListAsync(cancellationToken);
         return toDoItems;
     }

@@ -2,7 +2,7 @@
 
 namespace WebApi.Middlewares.CustomExceptionsHandling;
 
-public class ModelNotFoundExceptionHandlingMiddleware
+public sealed class ModelNotFoundExceptionHandlingMiddleware
 {
     private readonly RequestDelegate _next;
 

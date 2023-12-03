@@ -2,7 +2,7 @@
 
 namespace Application.Habits.Calculations.DateTimeOffsetIncrementer;
 
-public class DateTimeOffsetIncrementer : IDateTimeOffsetIncrementer
+public sealed class DateTimeOffsetIncrementer : IDateTimeOffsetIncrementer
 {
     /// <inheritdoc />
     public DateTimeOffset Increment(DateTimeOffset dateToIncrement, TimeUnit timeUnit, int numberOfUnits)
