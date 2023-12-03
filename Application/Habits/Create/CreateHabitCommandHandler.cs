@@ -1,4 +1,5 @@
-﻿using Domain;
+﻿using Application.Common.Services.Creators.InitialHabitToDoItemsCreator;
+using Domain;
 using Domain.Habit;
 using MediatR;
 
@@ -6,14 +7,17 @@ namespace Application.Habits.Create;
 
 public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitCommand>
 {
+    private readonly IInitialHabitToDoItemsCreator _initialHabitToDoItemsCreator;
     private readonly IHabitRepository _habitRepository;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IPublisher _publisher;
 
-    public CreateHabitCommandHandler(IHabitRepository habitRepository,
+    public CreateHabitCommandHandler(IInitialHabitToDoItemsCreator initialHabitToDoItemsCreator,
+        IHabitRepository habitRepository,
         IUnitOfWork unitOfWork,
         IPublisher publisher)
     {
+        _initialHabitToDoItemsCreator = initialHabitToDoItemsCreator;
         _habitRepository = habitRepository;
         _unitOfWork = unitOfWork;
         _publisher = publisher;
@@ -22,7 +26,9 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
     public async Task Handle(CreateHabitCommand request, CancellationToken cancellationToken)
     {
         var habit = CreateHabit(request);
-        await AddHabitAsync(habit, cancellationToken);
+        _habitRepository.Add(habit);
+        await _initialHabitToDoItemsCreator.CreateInitialToDoItemsAsync(habit, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
         await PublishHabitCreatedNotificationAsync(habit, cancellationToken);
     }
 
@@ -41,13 +47,7 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
             ToDoItemDescription = request.ToDoItemDescription
         };
     }
-
-    private async Task AddHabitAsync(IHabit habit, CancellationToken cancellationToken)
-    {
-        _habitRepository.Add(habit);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-    }
-        
+    
     private async Task PublishHabitCreatedNotificationAsync(Habit habit, CancellationToken cancellationToken)
     {
         var habitCreatedNotification = new HabitCreatedNotification
