@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using FluentValidation.Results;
 using MediatR;
 
 namespace Application.Common.Services.PipelineBehaviours;
@@ -15,8 +16,14 @@ public sealed class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var context = new ValidationContext<TRequest>(request);
-        var failures = _validators
-            .Select(v => v.Validate(context))
+        var validationResults = new List<ValidationResult>();
+        foreach (var validator in _validators)
+        {
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            validationResults.Add(validationResult);
+        }
+        
+        var failures = validationResults
             .SelectMany(result => result.Errors)
             .Where(f => f is not null)
             .ToList();

@@ -9,7 +9,10 @@ using WebApi.Middlewares;
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-builder.Services.AddCarter();
+builder.Services.AddCarter(configurator: configurator =>
+{
+    configurator.WithValidatorLifetime(ServiceLifetime.Scoped);
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

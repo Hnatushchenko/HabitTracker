@@ -19,10 +19,12 @@ public sealed class ToDoItemRepository : IToDoItemRepository
         _timeProvider = timeProvider;
     }
     
+    
+    
     public async Task<List<ToDoItem>> GetAllAsync(CancellationToken cancellationToken)
     {
         var toDoItems = await _applicationContext.ToDoItems
-            .ToListAsync(cancellationToken: cancellationToken);
+            .ToListAsync(cancellationToken);
         return toDoItems;
     }
     
@@ -38,6 +40,18 @@ public sealed class ToDoItemRepository : IToDoItemRepository
         }
 
         return toDoItem;
+    }
+    
+    public async Task<ToDoItem?> GetByIdOrDefaultAsync(ToDoItemId id, CancellationToken cancellationToken)
+    {
+        var toDoItem = await _applicationContext.ToDoItems.FindAsync(id, cancellationToken);
+        return toDoItem;
+    }
+    
+    public async Task<bool> ExistsAsync(ToDoItemId id, CancellationToken cancellationToken)
+    {
+        var result = await _applicationContext.ToDoItems.AnyAsync(toDoItem => toDoItem.Id == id, cancellationToken);
+        return result;
     }
     
     /// <inheritdoc/>
