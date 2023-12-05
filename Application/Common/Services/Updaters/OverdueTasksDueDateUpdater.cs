@@ -20,7 +20,7 @@ public sealed class OverdueTasksDueDateUpdater : IOverdueTasksDueDateUpdater
     public async Task SetDueDateForTodayForOverdueTasks(CancellationToken cancellationToken)
     {
         var utcNow = _timeProvider.GetUtcNow();
-        var utcNowWithoutTime = new DateTimeOffset(utcNow.Date);
+        var utcNowWithoutTime = new DateTimeOffset(utcNow.Date, TimeSpan.Zero);
         var overdueToDoItems = await _toDoItemRepository.GetUncompletedToDoItemsThatAreNotBasedOnHabitsWhereDueDateIsLessThenAsync(utcNowWithoutTime, cancellationToken);
         foreach (var overdueToDoItem in overdueToDoItems)
         {
