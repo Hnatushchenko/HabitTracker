@@ -1,6 +1,6 @@
 ﻿using Domain.Habit;
 
-namespace Application.Habits.Calculations.DateTimeOffsetIncrementer;
+namespace Application.Habits.Calculations;
 
 public sealed class DateTimeOffsetIncrementer : IDateTimeOffsetIncrementer
 {

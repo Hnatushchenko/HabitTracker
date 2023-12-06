@@ -4,7 +4,7 @@ using Application.Common.Services.Creators.MissingHabitBasedToDoItemsCreator;
 using Application.Common.Services.PipelineBehaviours;
 using Application.Common.Services.Updaters;
 using Application.Frequency.DayOfWeekToDayOfWeekFrequencyMapper;
-using Application.Habits.Calculations.DateTimeOffsetIncrementer;
+using Application.Habits.Calculations;
 using Application.Habits.Calculations.HabitOccurrencesCalculator;
 using Application.Habits.Get;
 using FluentValidation;
