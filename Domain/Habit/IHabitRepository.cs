@@ -1,4 +1,6 @@
-﻿namespace Domain.Habit;
+﻿using Domain.Habit.ValueObjects;
+
+namespace Domain.Habit;
 
 public interface IHabitRepository : IRepository<IHabit, HabitId>
 {

@@ -1,5 +1,6 @@
 ﻿using Application.Frequency.DayOfWeekToDayOfWeekFrequencyMapper;
 using Domain.Habit;
+using Domain.Habit.Enums;
 using Helpers.Extensions;
 
 namespace Application.Habits.Calculations.HabitOccurrencesCalculator;

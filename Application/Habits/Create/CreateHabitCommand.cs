@@ -1,4 +1,4 @@
-﻿using Domain.Habit;
+﻿using Domain.Habit.Enums;
 using MediatR;
 
 namespace Application.Habits.Create;

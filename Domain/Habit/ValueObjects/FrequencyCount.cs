@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 
-namespace Domain.Habit;
+namespace Domain.Habit.ValueObjects;
 
 public sealed class FrequencyCount : ValueOf<int, FrequencyCount>
 {

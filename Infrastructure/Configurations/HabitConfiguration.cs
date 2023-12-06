@@ -1,4 +1,5 @@
 ﻿using Domain.Habit;
+using Domain.Habit.ValueObjects;
 using Infrastructure.ValueConverters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -14,6 +15,9 @@ public sealed class HabitConfiguration : IEntityTypeConfiguration<Habit>
             .WithOne(e => e.Habit)
             .HasForeignKey(e => e.HabitId)
             .IsRequired(false);
+        builder.HasMany(e => e.HabitArchivedPeriods)
+            .WithOne(e => e.Habit)
+            .HasForeignKey(e => e.HabitId);
         builder.Property(h => h.Id)
             .HasConversion(habitId => habitId.Value, value => new HabitId(value));
         builder.Property(h => h.FrequencyCount)

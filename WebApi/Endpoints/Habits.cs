@@ -6,7 +6,7 @@ using Application.Habits.Statistic.Get;
 using Application.Habits.Unarchive;
 using Application.Habits.Update;
 using Carter;
-using Domain.Habit;
+using Domain.Habit.ValueObjects;
 using MediatR;
 
 namespace WebApi.Endpoints;
@@ -26,17 +26,19 @@ public sealed class Habits : ICarterModule
             CancellationToken cancellationToken) =>
         {
             var archiveHabitCommand = new ArchiveHabitCommand(new HabitId(id));
-            await sender.Send(archiveHabitCommand, cancellationToken);
-            return Results.NoContent();
+            var result = await sender.Send(archiveHabitCommand, cancellationToken);
+            var actionResult = result.Match(success => Results.NoContent(), Results.BadRequest);
+            return actionResult;
         });
         
-        app.MapPatch("habits/{id:guid}/unarchive", async (Guid id,
+        app.MapPatch("habits/{habitId:guid}/unarchive", async (Guid habitId,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var unarchiveHabitCommand = new UnarchiveHabitCommand(new HabitId(id));
-            await sender.Send(unarchiveHabitCommand, cancellationToken);
-            return Results.NoContent();
+            var unarchiveHabitCommand = new UnarchiveHabitCommand(new HabitId(habitId));
+            var result = await sender.Send(unarchiveHabitCommand, cancellationToken);
+            var actionResult = result.Match(success => Results.NoContent(), Results.BadRequest);
+            return actionResult;
         });
         
         app.MapPatch("habits/{id:guid}", async (Guid id, UpdateHabitDetailsRequest request,

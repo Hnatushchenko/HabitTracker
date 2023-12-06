@@ -1,5 +1,5 @@
 ﻿using Application.Habits.Calculations;
-using Domain.Habit;
+using Domain.Habit.Enums;
 using FluentAssertions;
 
 namespace Application.UnitTests.Habits.Calculations;

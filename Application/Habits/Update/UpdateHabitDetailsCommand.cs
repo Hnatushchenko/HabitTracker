@@ -1,4 +1,4 @@
-﻿using Domain.Habit;
+﻿using Domain.Habit.ValueObjects;
 using MediatR;
 
 namespace Application.Habits.Update;

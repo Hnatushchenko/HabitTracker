@@ -2,6 +2,7 @@
 using Domain;
 using Domain.BadHabit;
 using Domain.Habit;
+using Domain.HabitArchivedPeriodEntity;
 using Domain.ToDoItem;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -20,8 +21,14 @@ public static class DependencyInjection
         services.AddScoped<IApplicationContext>(serviceProvider => 
             serviceProvider.GetRequiredService<ApplicationContext>());
         services.AddScoped<IUnitOfWork, UnitOfWork>();
-        services.AddScoped<IHabitRepository, HabitRepository>();
+        services.AddRepositories();
+    }
+    
+    private static void AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IHabitArchivedPeriodRepository, HabitArchivedPeriodRepository>();
         services.AddScoped<IToDoItemRepository, ToDoItemRepository>();
         services.AddScoped<IBadHabitRepository, BadHabitRepository>();
+        services.AddScoped<IHabitRepository, HabitRepository>();
     }
 }

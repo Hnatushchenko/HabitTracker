@@ -1,4 +1,7 @@
-﻿namespace Domain.Habit;
+﻿using Domain.Habit.Enums;
+using Domain.Habit.ValueObjects;
+
+namespace Domain.Habit;
 
 public interface IHabit
 {

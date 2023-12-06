@@ -2,6 +2,7 @@
 using Application.Habits.Calculations.HabitOccurrencesCalculator;
 using Domain.Habit;
 using Domain.Habit.Exceptions;
+using Domain.Habit.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using OneOf;
 using OneOf.Types;
@@ -91,7 +92,8 @@ public sealed class HabitRepository : IHabitRepository
     public async Task<List<IHabit>> GetActiveHabitsByTargetDateAsync(DateTimeOffset targetDate, CancellationToken cancellationToken)
     {
         var activeHabits = await _applicationContext.Habits
-            .Where(habit => !habit.IsArchived)
+            .Include(habit => habit.HabitArchivedPeriods)
+            .Where(habit => habit.HabitArchivedPeriods.Any(period => targetDate < period.StartDate || targetDate > period.EndDate))
             .ToListAsync(cancellationToken);
         var filteredHabits = activeHabits
             .Where(habit => _habitOccurrencesCalculator.ShouldHabitOccurOnSpecifiedDate(habit, targetDate))

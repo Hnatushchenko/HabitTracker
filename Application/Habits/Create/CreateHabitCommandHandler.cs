@@ -1,6 +1,7 @@
 ﻿using Application.Common.Services.Creators.InitialHabitToDoItemsCreator;
 using Domain;
 using Domain.Habit;
+using Domain.Habit.ValueObjects;
 using MediatR;
 
 namespace Application.Habits.Create;

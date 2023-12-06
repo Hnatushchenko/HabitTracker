@@ -1,4 +1,4 @@
-﻿namespace Domain.Habit;
+﻿namespace Domain.Habit.Enums;
 
 public enum TimeUnit
 {

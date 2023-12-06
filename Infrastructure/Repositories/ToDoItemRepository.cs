@@ -1,5 +1,5 @@
 ﻿using Application.Data;
-using Domain.Habit;
+using Domain.Habit.ValueObjects;
 using Domain.ToDoItem;
 using Domain.ToDoItem.Exceptions;
 using Helpers.Extensions;

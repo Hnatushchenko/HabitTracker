@@ -1,5 +1,7 @@
 ﻿using System.Reflection;
 using Domain.Habit;
+using Domain.Habit.Enums;
+using Domain.Habit.ValueObjects;
 using Xunit.Sdk;
 
 namespace Application.UnitTests.Habits.Calculations;

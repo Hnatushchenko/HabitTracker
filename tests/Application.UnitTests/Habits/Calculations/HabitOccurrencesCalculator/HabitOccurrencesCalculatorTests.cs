@@ -2,6 +2,8 @@
 using Application.Habits.Calculations;
 using Application.Habits.Calculations.HabitOccurrencesCalculator;
 using Domain.Habit;
+using Domain.Habit.Enums;
+using Domain.Habit.ValueObjects;
 using FluentAssertions;
 
 namespace Application.UnitTests.Habits.Calculations;
