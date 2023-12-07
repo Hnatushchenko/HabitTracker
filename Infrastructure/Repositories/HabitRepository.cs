@@ -93,7 +93,9 @@ public sealed class HabitRepository : IHabitRepository
     {
         var activeHabits = await _applicationContext.Habits
             .Include(habit => habit.HabitArchivedPeriods)
-            .Where(habit => habit.HabitArchivedPeriods.Any(period => targetDate < period.StartDate || targetDate > period.EndDate))
+            .Where(habit => habit.HabitArchivedPeriods.All(period =>
+                targetDate < period.StartDate || (period.EndDate != null && targetDate > period.EndDate)
+            ))
             .ToListAsync(cancellationToken);
         var filteredHabits = activeHabits
             .Where(habit => _habitOccurrencesCalculator.ShouldHabitOccurOnSpecifiedDate(habit, targetDate))

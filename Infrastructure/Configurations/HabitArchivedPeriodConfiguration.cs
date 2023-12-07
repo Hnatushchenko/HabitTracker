@@ -13,6 +13,6 @@ public class HabitArchivedPeriodConfiguration : IEntityTypeConfiguration<HabitAr
         builder.Property(h => h.Id)
             .HasConversion(id => id.Value, value => new HabitArchivedPeriodId(value));
         builder.ToTable(t => t.HasCheckConstraint(nameof(HabitArchivedPeriod.StartDate),
-            $"{nameof(HabitArchivedPeriod.StartDate)} <= {nameof(HabitArchivedPeriod.StartDate)}"));
+            $"{nameof(HabitArchivedPeriod.StartDate)} <= {nameof(HabitArchivedPeriod.EndDate)}"));
     }
 }
