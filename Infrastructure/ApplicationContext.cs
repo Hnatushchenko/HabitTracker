@@ -14,9 +14,12 @@ public sealed class ApplicationContext : DbContext, IApplicationContext
     public DbSet<Habit> Habits => Set<Habit>();
     public DbSet<BadHabit> BadHabits => Set<BadHabit>();
     public DbSet<BadHabitOccurrence> BadHabitOccurrences => Set<BadHabitOccurrence>();
-    
+
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        : base(options) { }
+        : base(options)
+    {
+        Database.EnsureCreated();
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

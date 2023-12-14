@@ -15,7 +15,9 @@ public static class DependencyInjection
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        var connectionString = configuration.GetConnectionString("default");
+        var connectionStringFromEnvironment = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+        var connectionStringFromConfiguration = configuration.GetConnectionString("default");
+        var connectionString = connectionStringFromEnvironment ?? connectionStringFromConfiguration;
         services.AddDbContext<ApplicationContext>(options =>
             options.UseSqlServer(connectionString));
         services.AddScoped<IApplicationContext>(serviceProvider => 

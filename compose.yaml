@@ -1,0 +1,29 @@
+services:
+  server:
+    build:
+      context: ./
+    depends_on:
+      - database
+    environment:
+      DB_CONNECTION_STRING: data source=172.30.80.1,1433;initial catalog=HabitTrackerDb;user id=sa;password=ThatsMy1Pass!;Encrypt=False
+    ports:
+      - 7079:8080
+      - 7080:8081
+
+  database:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    user: root
+    environment:
+      MSSQL_SA_PASSWORD: ThatsMy1Pass!
+      ACCEPT_EULA: Y
+    volumes: 
+      - mssql-data:/var/opt/mssql/data
+      - mssql-log:/var/opt/mssql/log
+      - mssql-secrets:/var/opt/mssql/secrets
+    ports:
+      - 1433:1433
+
+volumes:
+  mssql-data:
+  mssql-log:
+  mssql-secrets:
