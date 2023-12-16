@@ -1,17 +1,20 @@
+name: habit-tracker-container
 services:
   server:
+    image: hnatushchenko/habit-tracker
     build:
       context: ./
     depends_on:
       - database
     environment:
-      DB_CONNECTION_STRING: data source=172.30.80.1,1433;initial catalog=HabitTrackerDb;user id=sa;password=ThatsMy1Pass!;Encrypt=False
+      DB_CONNECTION_STRING: data source=database-container,1433;initial catalog=HabitTrackerDb;user id=sa;password=ThatsMy1Pass!;Encrypt=False
     ports:
-      - 7079:8080
-      - 7080:8081
+      - 7080:8080
+      - 7081:8081
 
   database:
     image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: database-container
     user: root
     environment:
       MSSQL_SA_PASSWORD: ThatsMy1Pass!
@@ -20,8 +23,6 @@ services:
       - mssql-data:/var/opt/mssql/data
       - mssql-log:/var/opt/mssql/log
       - mssql-secrets:/var/opt/mssql/secrets
-    ports:
-      - 1433:1433
 
 volumes:
   mssql-data:
