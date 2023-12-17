@@ -8,7 +8,7 @@ using FluentAssertions;
 
 namespace Application.UnitTests.Habits.Calculations;
 
-public class HabitOccurrencesCalculatorTests
+public sealed class HabitOccurrencesCalculatorTests
 {
     private readonly HabitOccurrencesCalculator _sut;
 

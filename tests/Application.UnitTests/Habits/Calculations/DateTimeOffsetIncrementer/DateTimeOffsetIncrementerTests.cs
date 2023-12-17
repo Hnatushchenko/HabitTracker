@@ -4,7 +4,7 @@ using FluentAssertions;
 
 namespace Application.UnitTests.Habits.Calculations;
 
-public class DateTimeOffsetIncrementerTests
+public sealed class DateTimeOffsetIncrementerTests
 {
     private readonly DateTimeOffsetIncrementer _sut = new();
 

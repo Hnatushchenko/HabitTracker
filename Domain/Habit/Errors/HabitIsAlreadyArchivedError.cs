@@ -2,7 +2,7 @@
 
 namespace Domain.Habit.Errors;
 
-public class HabitIsAlreadyArchivedError
+public sealed class HabitIsAlreadyArchivedError
 {
     public HabitIsAlreadyArchivedError(HabitId habitId)
     {

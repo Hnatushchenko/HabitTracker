@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Configurations;
 
-public class HabitArchivedPeriodConfiguration : IEntityTypeConfiguration<HabitArchivedPeriod>
+public sealed class HabitArchivedPeriodConfiguration : IEntityTypeConfiguration<HabitArchivedPeriod>
 {
     public void Configure(EntityTypeBuilder<HabitArchivedPeriod> builder)
     {

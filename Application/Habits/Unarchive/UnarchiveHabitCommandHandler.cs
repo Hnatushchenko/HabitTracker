@@ -13,16 +13,19 @@ public sealed class UnarchiveHabitCommandHandler : IRequestHandler<UnarchiveHabi
     private readonly IHabitRepository _habitRepository;
     private readonly TimeProvider _timeProvider;
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IPublisher _publisher;
 
     public UnarchiveHabitCommandHandler(IHabitArchivedPeriodRepository habitArchivedPeriodRepository,
         IHabitRepository habitRepository,
         TimeProvider timeProvider,
-        IUnitOfWork unitOfWork)
+        IUnitOfWork unitOfWork, 
+        IPublisher publisher)
     {
         _habitArchivedPeriodRepository = habitArchivedPeriodRepository;
         _habitRepository = habitRepository;
         _timeProvider = timeProvider;
         _unitOfWork = unitOfWork;
+        _publisher = publisher;
     }
     
     public async Task<SuccessOr<HabitIsNotArchivedError>> Handle(UnarchiveHabitCommand request, CancellationToken cancellationToken)
@@ -37,6 +40,17 @@ public sealed class UnarchiveHabitCommandHandler : IRequestHandler<UnarchiveHabi
         var unfinishedPeriod = await _habitArchivedPeriodRepository.GetUnfinishedPeriodByHabitIdAsync(habit.Id, cancellationToken);
         unfinishedPeriod.EndDate = utcNow;
         await _unitOfWork.SaveChangesAsync(cancellationToken);
+        await PublishHabitUnarchivedNotification(utcNow, cancellationToken);
         return new Success();
+    }
+
+    private async Task PublishHabitUnarchivedNotification(DateTimeOffset unarchivingDate,
+        CancellationToken cancellationToken)
+    {
+        var notification = new HabitUnarchivedNotification
+        {
+            UnarchivingDate = unarchivingDate
+        };
+        await _publisher.Publish(notification, cancellationToken);
     }
 }

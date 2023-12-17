@@ -6,7 +6,7 @@ using Xunit.Sdk;
 
 namespace Application.UnitTests.Habits.Calculations;
 
-public class HabitOccurrencesCalculatorTestsDataAttribute : DataAttribute
+public sealed class HabitOccurrencesCalculatorTestsDataAttribute : DataAttribute
 {
     public override IEnumerable<object[]> GetData(MethodInfo testMethod)
     {
