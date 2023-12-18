@@ -6,10 +6,13 @@ using Application.Common.Services.Updaters;
 using Application.Frequency.DayOfWeekToDayOfWeekFrequencyMapper;
 using Application.Habits.Calculations;
 using Application.Habits.Calculations.HabitOccurrencesCalculator;
+using Application.Habits.Create;
 using Application.Habits.Get;
+using Application.Habits.Unarchive;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace Application;
 
@@ -21,7 +24,6 @@ public static class DependencyInjection
     {
         services.AddSingleton<IGoodHabitStreakCalculator, GoodHabitStreakCalculator>();
         services.AddSingleton<IHabitOccurrencesCalculator, HabitOccurrencesCalculator>();
-        services.AddSingleton<IHabitBasedMissingToDoItemCreatorCache, HabitBasedMissingToDoItemCreatorCache>();
         services.AddSingleton<IDayOfWeekToDayOfWeekFrequencyMapper, DayOfWeekToDayOfWeekFrequencyMapper>();
         services.AddSingleton<IDateTimeOffsetIncrementer, DateTimeOffsetIncrementer>();
         services.AddScoped<IInitialHabitToDoItemsCreator, InitialHabitToDoItemsCreator>();
@@ -37,5 +39,18 @@ public static class DependencyInjection
         services.AddMediatR(configuration => configuration.RegisterServicesFromAssembly(ApplicationAssembly));
         services.AddValidatorsFromAssembly(ApplicationAssembly);
         services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-    } 
+        services.AddHabitBasedMissingToDoItemCreatorCache();
+    }
+
+    private static void AddHabitBasedMissingToDoItemCreatorCache(this IServiceCollection services)
+    {
+        services.RemoveAll<INotificationHandler<HabitCreatedNotification>>();
+        services.RemoveAll<INotificationHandler<HabitUnarchivedNotification>>();
+        services.AddSingleton<HabitBasedMissingToDoItemCreatorCache>();
+        var getHabitBasedMissingToDoItemCreatorCache = (IServiceProvider serviceProvider) =>
+            serviceProvider.GetRequiredService<HabitBasedMissingToDoItemCreatorCache>();
+        services.AddSingleton<IHabitBasedMissingToDoItemCreatorCache>(getHabitBasedMissingToDoItemCreatorCache);
+        services.AddSingleton<INotificationHandler<HabitCreatedNotification>>(getHabitBasedMissingToDoItemCreatorCache);
+        services.AddSingleton<INotificationHandler<HabitUnarchivedNotification>>(getHabitBasedMissingToDoItemCreatorCache);
+    }
 }

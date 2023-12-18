@@ -10,12 +10,12 @@ public sealed class HabitBasedMissingToDoItemCreatorCache : IHabitBasedMissingTo
     INotificationHandler<HabitCreatedNotification>,
     INotificationHandler<HabitUnarchivedNotification>
 {
-    private static readonly ConcurrentDictionary<DateOnly, bool> Cache = new();
+    private readonly ConcurrentDictionary<DateOnly, bool> _cache = new();
     
     public bool TryAdd(DateTimeOffset date)
     {
         var dateOnly = date.ToDateOnly();
-        var isAdded = Cache.TryAdd(dateOnly, true);
+        var isAdded = _cache.TryAdd(dateOnly, true);
         return isAdded;
     }
 
@@ -33,8 +33,8 @@ public sealed class HabitBasedMissingToDoItemCreatorCache : IHabitBasedMissingTo
         return Task.CompletedTask;
     }
 
-    private static void ClearCacheStartingFromDate(DateOnly dateOnly)
+    private void ClearCacheStartingFromDate(DateOnly dateOnly)
     {
-        Cache.RemoveAll(pair => pair.Key >= dateOnly);
+        _cache.RemoveAll(pair => pair.Key >= dateOnly);
     }
 }
