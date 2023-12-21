@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Application.Habits.Get;
 
-public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnumerable<HabitResponse>>
+public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, HabitsResponse>
 {
     private readonly IGoodHabitStreakCalculator _goodHabitStreakCalculator;
     private readonly IHabitRepository _habitRepository;
@@ -15,7 +15,7 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
         _habitRepository = habitRepository;
     }
     
-    public async Task<IEnumerable<HabitResponse>> Handle(GetHabitsQuery request, CancellationToken cancellationToken)
+    public async Task<HabitsResponse> Handle(GetHabitsQuery request, CancellationToken cancellationToken)
     {
         var habits = await _habitRepository.GetAllHabitsWithToDoItemsIncludedAsync(cancellationToken);
         var habitResponseList = habits.Select(habit =>
@@ -34,6 +34,8 @@ public sealed class GetHabitsQueryHandler : IRequestHandler<GetHabitsQuery, IEnu
                 Streak = streak
             };
         });
-        return habitResponseList;
+
+        var habitsResponse = new HabitsResponse(habitResponseList);
+        return habitsResponse;
     }
 }

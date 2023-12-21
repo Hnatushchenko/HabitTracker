@@ -16,18 +16,15 @@ public sealed class BadHabits : ICarterModule
     {
         app.MapGet("bad-habits", async (ISender sender, CancellationToken cancellationToken) =>
         {
-            var badHabitResponseList = await sender.Send(GetBadHabitsQuery.Instance, cancellationToken);
-            return Results.Ok(badHabitResponseList);
+            var badHabitsResponse = await sender.Send(GetBadHabitsQuery.Instance, cancellationToken);
+            return Results.Ok(badHabitsResponse);
         });
         
         app.MapGet("bad-habits/{id:guid}/statistic", async (Guid id,
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var getBadHabitStatisticQuery = new GetBadHabitStatisticQuery
-            {
-                BadHabitId = new BadHabitId(id)
-            };
+            var getBadHabitStatisticQuery = new GetBadHabitStatisticQuery(new BadHabitId(id));
             var getBadHabitStatisticResponse = await sender.Send(getBadHabitStatisticQuery, cancellationToken);
             return Results.Ok(getBadHabitStatisticResponse);
         });
@@ -84,10 +81,7 @@ public sealed class BadHabits : ICarterModule
             ISender sender,
             CancellationToken cancellationToken) =>
         {
-            var deleteBadHabitCommand = new DeleteBadHabitCommand
-            {
-                BadHabitId = new BadHabitId(id)
-            };
+            var deleteBadHabitCommand = new DeleteBadHabitCommand(new BadHabitId(id));
             await sender.Send(deleteBadHabitCommand, cancellationToken);
             return Results.NoContent();
         });

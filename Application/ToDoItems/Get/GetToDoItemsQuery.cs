@@ -2,7 +2,7 @@
 
 namespace Application.ToDoItems.Get;
 
-public sealed record GetToDoItemsQuery : IRequest<IEnumerable<ToDoItemResponse>>
+public sealed record GetToDoItemsQuery : IRequest<ToDoItemsResponse>
 {
     /// <summary>
     /// Gets or sets the date for which ToDoItems are queried.

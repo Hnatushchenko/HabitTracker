@@ -2,7 +2,7 @@
 
 namespace Application.BadHabits.Get;
 
-public sealed class GetBadHabitsQuery : IRequest<IEnumerable<BadHabitResponse>>
+public sealed class GetBadHabitsQuery : IRequest<BadHabitsResponse>
 {
     private GetBadHabitsQuery() {}
 

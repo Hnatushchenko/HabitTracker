@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Application.ToDoItems.Get;
 
-public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery, IEnumerable<ToDoItemResponse>>
+public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery, ToDoItemsResponse>
 {
     private readonly IMissingHabitsBasedToDoItemsCreator _missingHabitsBasedToDoItemsCreator;
     private readonly IOverdueTasksDueDateUpdater _overdueTasksDueDateUpdater;
@@ -19,14 +19,15 @@ public sealed class GetToDoItemsQueryHandler : IRequestHandler<GetToDoItemsQuery
         _overdueTasksDueDateUpdater = overdueTasksDueDateUpdater;
         _toDoItemRepository = toDoItemRepository;
     }
-    public async Task<IEnumerable<ToDoItemResponse>> Handle(GetToDoItemsQuery request, CancellationToken cancellationToken)
+    public async Task<ToDoItemsResponse> Handle(GetToDoItemsQuery request, CancellationToken cancellationToken)
     {
         var targetDate = request.TargetDate;
         await _overdueTasksDueDateUpdater.SetDueDateForTodayForOverdueTasks(cancellationToken);
         await _missingHabitsBasedToDoItemsCreator.CreateMissingToDoItemsAsync(targetDate, cancellationToken);
         var toDoItems = await _toDoItemRepository.GetByDueDateAndNotHiddenAsync(targetDate, cancellationToken);
         var toDoItemResponseList = ConvertAllToDoItemsToTree(toDoItems);
-        return toDoItemResponseList;
+        var toDoItemsResponse = new ToDoItemsResponse(toDoItemResponseList);
+        return toDoItemsResponse;
     }
     
     private static ToDoItemResponse MapToDoItemToToDoItemResponse(ToDoItem toDoItem)

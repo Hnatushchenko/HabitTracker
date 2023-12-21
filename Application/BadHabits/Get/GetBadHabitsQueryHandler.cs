@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Application.BadHabits.Get;
 
-public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery, IEnumerable<BadHabitResponse>>
+public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery, BadHabitsResponse>
 {
     private readonly IApplicationContext _applicationContext;
     private readonly TimeProvider _timeProvider;
@@ -18,7 +18,7 @@ public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery
         _timeProvider = timeProvider;
     }
     
-    public async Task<IEnumerable<BadHabitResponse>> Handle(GetBadHabitsQuery request, CancellationToken cancellationToken)
+    public async Task<BadHabitsResponse> Handle(GetBadHabitsQuery request, CancellationToken cancellationToken)
     {
         var badHabits = await _applicationContext.BadHabits
             .Include(badHabit => badHabit.Occurrences)
@@ -39,7 +39,8 @@ public sealed class GetBadHabitsQueryHandler : IRequestHandler<GetBadHabitsQuery
             badHabitResponseList[i] = badHabitResponse;
         }
 
-        return badHabitResponseList;
+        var badHabitsResponse = new BadHabitsResponse(badHabitResponseList);
+        return badHabitsResponse;
     }
 
     private static DateTimeOffset GetStartDateForStreakCalculation(BadHabit badHabit)

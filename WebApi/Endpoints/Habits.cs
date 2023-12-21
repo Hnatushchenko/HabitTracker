@@ -17,7 +17,7 @@ public sealed class Habits : ICarterModule
     {
         app.MapGet("habits", async (ISender sender, CancellationToken cancellationToken) =>
         {
-            var habits = await sender.Send(new GetHabitsQuery(), cancellationToken);
+            var habits = await sender.Send(GetHabitsQuery.Instance, cancellationToken);
             return Results.Ok(habits);
         });
         
@@ -62,7 +62,7 @@ public sealed class Habits : ICarterModule
             CancellationToken cancellationToken) =>
         {
             await sender.Send(command, cancellationToken);
-            return Results.Ok();
+            return Results.NoContent();
         });
 
         app.MapDelete("habits/{habitId:guid}", async (Guid habitId,
