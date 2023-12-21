@@ -3,7 +3,7 @@ using Domain.HabitArchivedPeriodEntity.ValueObjects;
 
 namespace Domain.HabitArchivedPeriodEntity;
 
-public sealed class HabitArchivedPeriod
+public class HabitArchivedPeriod
 {
     public required HabitArchivedPeriodId Id { get; set; }
     public required DateTimeOffset StartDate { get; set; }

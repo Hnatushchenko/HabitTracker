@@ -29,8 +29,8 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
         var habit = CreateHabit(request);
         _habitRepository.Add(habit);
         await _initialHabitToDoItemsCreator.CreateInitialToDoItemsAsync(habit, cancellationToken);
-        await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await PublishHabitCreatedNotificationAsync(habit, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(CancellationToken.None);
+        await PublishHabitCreatedNotificationAsync(habit);
     }
 
     private static Habit CreateHabit(CreateHabitCommand request)
@@ -49,12 +49,12 @@ public sealed class CreateHabitCommandHandler : IRequestHandler<CreateHabitComma
         };
     }
     
-    private async Task PublishHabitCreatedNotificationAsync(Habit habit, CancellationToken cancellationToken)
+    private async Task PublishHabitCreatedNotificationAsync(Habit habit)
     {
         var habitCreatedNotification = new HabitCreatedNotification
         {
             Habit = habit
         };
-        await _publisher.Publish(habitCreatedNotification, cancellationToken);
+        await _publisher.Publish(habitCreatedNotification);
     }
 }

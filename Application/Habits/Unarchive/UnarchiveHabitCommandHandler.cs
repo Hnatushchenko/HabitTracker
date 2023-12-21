@@ -30,27 +30,32 @@ public sealed class UnarchiveHabitCommandHandler : IRequestHandler<UnarchiveHabi
     
     public async Task<SuccessOr<HabitIsNotArchivedError>> Handle(UnarchiveHabitCommand request, CancellationToken cancellationToken)
     {
-        var utcNow = _timeProvider.GetUtcNow();
         var habit = await _habitRepository.GetByIdAsync(request.HabitId, cancellationToken);
         if (!habit.IsArchived)
         {
             return new HabitIsNotArchivedError(request.HabitId);
         }
         habit.IsArchived = false;
-        var unfinishedPeriod = await _habitArchivedPeriodRepository.GetUnfinishedPeriodByHabitIdAsync(habit.Id, cancellationToken);
-        unfinishedPeriod.EndDate = utcNow;
+        await CompleteLastHabitArchivedPeriod(habit, cancellationToken);
         await _unitOfWork.SaveChangesAsync(cancellationToken);
-        await PublishHabitUnarchivedNotification(utcNow, cancellationToken);
+        await PublishHabitUnarchivedNotification();
         return new Success();
     }
 
-    private async Task PublishHabitUnarchivedNotification(DateTimeOffset unarchivingDate,
-        CancellationToken cancellationToken)
+    private async Task CompleteLastHabitArchivedPeriod(IHabit habit, CancellationToken cancellationToken)
+    {
+        var unfinishedPeriod =
+            await _habitArchivedPeriodRepository.GetUnfinishedPeriodByHabitIdAsync(habit.Id, cancellationToken);
+        var utcNow = _timeProvider.GetUtcNow();
+        unfinishedPeriod.EndDate = utcNow;
+    }
+
+    private async Task PublishHabitUnarchivedNotification()
     {
         var notification = new HabitUnarchivedNotification
         {
-            UnarchivingDate = unarchivingDate
+            UnarchivingDate = _timeProvider.GetUtcNow()
         };
-        await _publisher.Publish(notification, cancellationToken);
+        await _publisher.Publish(notification);
     }
 }
